@@ -3,10 +3,14 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
+import { Header } from './header/header';
+import { Editbudget } from './editbudget/editbudget';
 
 @NgModule({
   declarations: [
-    App
+    App,
+    Header,
+    Editbudget
   ],
   imports: [
     BrowserModule,
