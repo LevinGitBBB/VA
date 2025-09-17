@@ -1,1 +1,18 @@
-<p>editbudget works!</p>
+<h2> Welcome to your Budget-Planner</h2>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Group</th>
+            <th>Title</th>
+            <th>Value</th>
+
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let budgetEntry of budgetEntries">
+            <td>{{budgetEntry.group}}</td>
+            <td>{{budgetEntry.title}}</td>
+            <td>{{budgetEntry.value}}</td>
+        </tr>
+    </tbody>
+</table>
