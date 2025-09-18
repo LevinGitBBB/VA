@@ -1,1 +1,18 @@
-/* You can add global styles to this file, and also import other style files */
+/* Light mode (default) */
+:root {
+  --bg-color: #01012b;
+  --text-color: #fff;
+  --primary-color: #008cff;
+  --secondary-color: #737594;
+}
+
+/* Apply variables */
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: background-color 0.3s, color 0.3s;
+}
+
+button {
+  color: var(--text-color);
+}

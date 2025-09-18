@@ -7,13 +7,15 @@ import { Header } from './header/header';
 import { Editbudget } from './editbudget/editbudget';
 import { BudgetForm } from './budget-form/budget-form';
 import { ReactiveFormsModule } from '@angular/forms';
+import { Home } from './home/home';
 
 @NgModule({
   declarations: [
     App,
     Header,
     Editbudget,
-    BudgetForm
+    BudgetForm,
+    Home
   ],
   imports: [
     BrowserModule,

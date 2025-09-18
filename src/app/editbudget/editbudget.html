@@ -19,3 +19,15 @@
         </tr>
     </tbody>
 </table>
+
+<p align="right">
+  <button class="btn primary-gradient" (click)="toggleForm()">
+    {{ showForm ? 'Hide' : 'Add an Object' }}
+  </button>
+</p>
+
+@if (showForm) {
+  <div class="enter-container" animate.enter="enter-animation" animate.leave="leaving">
+    <app-budget-form></app-budget-form>
+  </div>
+}

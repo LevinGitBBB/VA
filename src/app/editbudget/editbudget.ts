@@ -1,32 +1,46 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Subscription } from "rxjs";
 import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
-import { Subject, Subscription} from "rxjs";
 
 @Component({
   selector: 'app-editbudget',
   standalone: false,
   templateUrl: './editbudget.html',
-  styleUrl: './editbudget.css'
+  styleUrls: ['./editbudget.css',
+    '../ImportStyles/customButtons.css'
+  ]
 })
-export class Editbudget implements OnInit, OnDestroy{
+export class Editbudget implements OnInit, OnDestroy {
 
-  budgetEntries: BudgetEntry[];
-  budgetSubscription = new Subscription();
+  showForm = false;
+  budgetEntries: BudgetEntry[] = [];
+  budgetSubscription: Subscription;
 
   constructor(private budgetDataService: BudgetDataService) {}
 
-  ngOnInit(): void{
-    this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(diaryEntries => {
-      this.budgetEntries = this.budgetEntries;
-    })
-    this.budgetEntries = this.budgetDataService.budgetEntries
-  }
-  ngOnDestroy(): void {
-    this.budgetSubscription.unsubscribe();
+  ngOnInit(): void {
+
+    this.budgetEntries = this.budgetDataService.budgetEntries;
+
+    this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
+      (entries: BudgetEntry[]) => {
+        this.budgetEntries = entries;
+      }
+    );
   }
 
-  onDelete(index: number){
+  ngOnDestroy(): void {
+    if (this.budgetSubscription) {
+      this.budgetSubscription.unsubscribe();
+    }
+  }
+
+  onDelete(index: number): void {
     this.budgetDataService.onDelete(index);
+  }
+
+  toggleForm() {
+    this.showForm = !this.showForm;
   }
 }
