@@ -5,14 +5,17 @@
             <th>Group</th>
             <th>Title</th>
             <th>Value</th>
-
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let budgetEntry of budgetEntries">
+        <tr *ngFor="let budgetEntry of budgetEntries; let i = index ">
             <td>{{budgetEntry.group}}</td>
             <td>{{budgetEntry.title}}</td>
             <td>{{budgetEntry.value}}</td>
+            <td><button class="btn btn-light">Edit</button>
+                <button (click)="onDelete(i)" class="btn btn-danger">Delete</button>
+            </td>
         </tr>
     </tbody>
 </table>
