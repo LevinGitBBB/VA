@@ -13,15 +13,15 @@
             <td>{{budgetEntry.group}}</td>
             <td>{{budgetEntry.title}}</td>
             <td>{{budgetEntry.value}}</td>
-            <td><button class="btn btn-light">Edit</button>
-                <button (click)="onDelete(i)" class="btn btn-danger">Delete</button>
+            <td><button class="btn button3">Edit</button>
+                <button (click)="onDelete(i)" class="btn button4">Delete</button>
             </td>
         </tr>
     </tbody>
 </table>
 
 <p align="right">
-  <button class="btn primary-gradient" (click)="toggleForm()">
+  <button class="btn button2" (click)="toggleForm()">
     {{ showForm ? 'Hide' : 'Add an Object' }}
   </button>
 </p>

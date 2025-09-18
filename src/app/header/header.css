@@ -1,26 +1,6 @@
 .navbar {
-  position: relative;
-  display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  padding: 12px 20px;
-  border-radius: 12px;
-  background-color: #131219; /* solid background */
-  overflow: hidden;
-}
-
-.navbar::before {
-  content: '';
-  width: 150%; /* The upscaling allows the box to fill its container even when rotated */
-  height: 150%;
-  position: absolute;
-  top: -25%; left: -25%;
-  background: conic-gradient(#0000ff00, #ff0000ff);
-  animation: rotate-border 5s linear infinite;
-}
-
-@keyframes rotate-border {
-    to {
-        transform: rotate(360deg);
-    }
+    background-color: #1a1a1a; /* Dark background, adjust as needed */
+    margin-top: 15px;           /* Space from the top */
+    color: #ffffff;            /* Optional: make text white for contrast */
+    padding: 10px 10px;        /* Optional: add padding inside navbar */
 }
