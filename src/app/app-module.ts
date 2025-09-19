@@ -5,7 +5,6 @@ import { AppRoutingModule } from './app-routing-module';
 import { App } from './app';
 import { Header } from './header/header';
 import { Editbudget } from './editbudget/editbudget';
-import { BudgetForm } from './budget-form/budget-form';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Home } from './home/home';
 
@@ -14,7 +13,6 @@ import { Home } from './home/home';
     App,
     Header,
     Editbudget,
-    BudgetForm,
     Home
   ],
   imports: [
