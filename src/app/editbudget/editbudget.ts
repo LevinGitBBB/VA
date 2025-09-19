@@ -2,6 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Subscription } from "rxjs";
 import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
+import { Router } from '@angular/router';
+
 
 @Component({
   selector: 'app-editbudget',
@@ -17,7 +19,7 @@ export class Editbudget implements OnInit, OnDestroy {
   budgetEntries: BudgetEntry[] = [];
   budgetSubscription: Subscription;
 
-  constructor(private budgetDataService: BudgetDataService) {}
+  constructor(private budgetDataService: BudgetDataService, private router: Router) {}
 
   ngOnInit(): void {
 
@@ -39,6 +41,11 @@ export class Editbudget implements OnInit, OnDestroy {
   onDelete(index: number): void {
     this.budgetDataService.onDelete(index);
   }
+
+  onEdit(index: number){
+    this.router.navigate(["edit-budget", index])
+  }
+
 
   toggleForm() {
     this.showForm = !this.showForm;

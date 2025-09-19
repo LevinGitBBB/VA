@@ -13,8 +13,9 @@
             <td>{{budgetEntry.group}}</td>
             <td>{{budgetEntry.title}}</td>
             <td>{{budgetEntry.value}}</td>
-            <td><button class="btn button3">Edit</button>
-                <button (click)="onDelete(i)" class="btn button4">Delete</button>
+            <td>
+              <button (click)="onEdit(i)" class="btn button4">Edit</button>
+              <button (click)="onDelete(i)" class="btn button5">Delete</button>
             </td>
         </tr>
     </tbody>

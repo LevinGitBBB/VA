@@ -186,11 +186,11 @@ body {
     opacity: 0.3;
     transform-origin: center;
     transform: translate(-50%, -50%) scale(0);
-    transition: transform 0.4s ease-in-out;
+    transition: transform 0.3s ease-in-out;
     z-index: -1;
   }
   
-  &--active::after {
+  &::after {
     background-color: #f7841d;
     opacity: 1;
   }
@@ -244,7 +244,7 @@ body {
     top: 0;
     bottom: 0;
     right: 0;
-    background-color: #737594;
+    background-color: #fc8f01fb;
     border-radius: 26px;
     z-index: -2;
     transform: translate(-150%, -150%);
@@ -268,6 +268,63 @@ body {
     color: #d8d8e3;
   }
 }
+
+
+.button5 {
+  position: relative;
+  border-radius: 26px;
+  color: var(--textColor3);
+  border: none;
+  overflow: hidden;
+  z-index: 1;
+  
+  &::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #0e0e30;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+    border-radius: 26px;
+    z-index: -1;
+    transition: border-color 0.2s;
+  }
+  
+  &::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    background-color: #fc0101fb;
+    border-radius: 26px;
+    z-index: -2;
+    transform: translate(-150%, -150%);
+    transform-origin: left top;
+    transition: transform 0.2s;
+  }
+  
+  &:hover {
+    color: white;
+    
+    &::after {
+      transform: translate(0, 0);
+    }
+  }
+  
+  &:active {
+    color: #c3c4d5;
+  }
+  
+  &:focus {
+    color: #d8d8e3;
+  }
+}
+
 
 @keyframes gradientRotate {
   0% {

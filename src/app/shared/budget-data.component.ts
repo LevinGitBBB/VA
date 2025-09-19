@@ -17,4 +17,13 @@ export class BudgetDataService{
             this.budgetEntries.splice(index, 1);
             this.budgetSubject.next(this.budgetEntries);
         }
+
+        onAddBudgetEntry(budgetEntry: BudgetEntry){
+            this.budgetEntries.push(budgetEntry);
+            this.budgetSubject.next(this.budgetEntries);
+        }
+
+        getBudgetEntry(index: number){
+            return{...this.budgetEntries[index]}
+        }
 }
