@@ -13,9 +13,22 @@
             <td>{{budgetEntry.group}}</td>
             <td>{{budgetEntry.title}}</td>
             <td>{{budgetEntry.value}}</td>
-            <td><button class="btn btn-light">Edit</button>
-                <button (click)="onDelete(i)" class="btn btn-danger">Delete</button>
+            <td>
+              <button (click)="onEdit(i)" class="btn button4">Edit</button>
+              <button (click)="onDelete(i)" class="btn button5">Delete</button>
             </td>
         </tr>
     </tbody>
 </table>
+
+<p align="right">
+  <button class="btn button2" (click)="toggleForm()">
+    {{ showForm ? 'Hide' : 'Add an Object' }}
+  </button>
+</p>
+
+@if (showForm) {
+  <div class="enter-container" animate.enter="enter-animation" animate.leave="leaving">
+    <app-budget-form></app-budget-form>
+  </div>
+}
