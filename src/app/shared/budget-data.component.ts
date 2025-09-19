@@ -26,4 +26,12 @@ export class BudgetDataService{
         getBudgetEntry(index: number){
             return{...this.budgetEntries[index]}
         }
+
+        updateBudgetEntry(index: number, updatedEntry: BudgetEntry) {
+            if (index >= 0 && index < this.budgetEntries.length) {
+            this.budgetEntries[index] = updatedEntry;
+            this.budgetSubject.next(this.budgetEntries);
+        }
+}
+
 }

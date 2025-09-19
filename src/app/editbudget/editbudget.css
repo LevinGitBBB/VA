@@ -49,3 +49,6 @@ button{
   transition: opacity 500ms ease-out, transform 500ms ease-out;
 }
 
+.btn-success {
+    margin-bottom: 10px;
+}
