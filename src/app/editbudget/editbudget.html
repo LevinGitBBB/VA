@@ -13,8 +13,8 @@
       <td>{{ budgetEntry.title }}</td>
       <td>{{ budgetEntry.value }}</td>
       <td>
-        <button (click)="onEdit(i)" class="btn button4">Edit</button>
-        <button (click)="onDelete(i)" class="btn button5">Delete</button>
+        <button (click)="onEdit(budgetEntry.id)" class="btn button4">Edit</button>
+        <button (click)="onDelete(budgetEntry.id)" class="btn button5">Delete</button>
       </td>
     </tr>
   </tbody>

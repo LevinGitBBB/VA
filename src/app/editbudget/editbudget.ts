@@ -34,31 +34,32 @@ export class Editbudget implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.budgetEntries = this.budgetDataService.budgetEntries;
+  // trigger backend fetch
+  this.budgetDataService.getBudgetEntries();
 
-    this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
-      (entries: BudgetEntry[]) => {
-        this.budgetEntries = entries;
-      }
-    );
+  this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
+    (entries: BudgetEntry[]) => {
+      this.budgetEntries = entries;
+    }
+  );
 
-    this.budgetForm = new FormGroup({
-      group: new FormControl(null, Validators.required),
-      title: new FormControl(null, Validators.required),
-      value: new FormControl(null, [
-        Validators.required,
-        Validators.pattern(/^-?\d+(\.\d+)?$/)
-      ])
-    });
+  this.budgetForm = new FormGroup({
+    group: new FormControl(null, Validators.required),
+    title: new FormControl(null, Validators.required),
+    value: new FormControl(null, [
+      Validators.required,
+      Validators.pattern(/^-?\d+(\.\d+)?$/)
+    ])
+  });
 
-    // Check if route has 'id' for edit
-    this.activatedRoute.paramMap.subscribe(paramMap => {
-      if (paramMap.has('id')) {
-        const id = +paramMap.get('id')!;
-        this.startEdit(id);
-      }
-    });
-  }
+  this.activatedRoute.paramMap.subscribe(paramMap => {
+    if (paramMap.has('id')) {
+      const id = +paramMap.get('id')!;
+      this.startEdit(id);
+    }
+  });
+}
+
 
   ngOnDestroy(): void {
     if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
@@ -113,7 +114,7 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const newEntry = new BudgetEntry(formValue.group.name, formValue.title, formValue.value);
+    const newEntry = new BudgetEntry(1, formValue.group.name, formValue.title, formValue.value);
 
     if (this.editMode && this.budgetEntryIndex !== null) {
       this.budgetEntries[this.budgetEntryIndex] = newEntry;

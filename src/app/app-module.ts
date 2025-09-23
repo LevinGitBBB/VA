@@ -7,6 +7,7 @@ import { Header } from './header/header';
 import { Editbudget } from './editbudget/editbudget';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Home } from './home/home';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,8 @@ import { Home } from './home/home';
   imports: [
     BrowserModule,
     AppRoutingModule, 
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
