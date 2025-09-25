@@ -1,9 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
+
 
 @Component({
   selector: 'app-editbudget',
@@ -21,6 +22,9 @@ export class Editbudget implements OnInit, OnDestroy {
   editMode = false;
   budgetEntryIndex: number | null = null;
 
+  private paramId: string; 
+  budgetEntry: BudgetEntry; 
+
   groups = [
     { id: 1, name: 'Fixkosten' },
     { id: 2, name: 'Freizeit' },
@@ -34,32 +38,54 @@ export class Editbudget implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-  // trigger backend fetch
-  this.budgetDataService.getBudgetEntries();
+    this.budgetDataService.getBudgetEntries();
 
-  this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
-    (entries: BudgetEntry[]) => {
-      this.budgetEntries = entries;
-    }
-  );
+    // 2️⃣ Subscribe to budget entries updates
+    this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
+      (entries: BudgetEntry[]) => {
+        this.budgetEntries = entries;
+      }
+    );
 
-  this.budgetForm = new FormGroup({
-    group: new FormControl(null, Validators.required),
-    title: new FormControl(null, Validators.required),
-    value: new FormControl(null, [
-      Validators.required,
-      Validators.pattern(/^-?\d+(\.\d+)?$/)
-    ])
-  });
+    // 3️⃣ Initialize the form
+    this.budgetForm = new FormGroup({
+      group: new FormControl(null, Validators.required),
+      title: new FormControl(null, Validators.required),
+      value: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^-?\d+(\.\d+)?$/)
+      ])
+    });
 
-  this.activatedRoute.paramMap.subscribe(paramMap => {
-    if (paramMap.has('id')) {
-      const id = +paramMap.get('id')!;
-      this.startEdit(id);
-    }
-  });
-}
+    // 4️⃣ Subscribe to route params and control form visibility
+    this.activatedRoute.paramMap.subscribe((paramMap: ParamMap) => {
+      if (paramMap.has('id')) {
+        this.editMode = true;
+        this.paramId = paramMap.get('id')!;
 
+        // Find the budget entry by ID
+        const budgetEntry = this.budgetDataService.getBudgetEntry(+this.paramId);
+        if (budgetEntry) {
+          this.showForm = true; // ensures form shows immediately
+          this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
+
+          const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
+
+          // Patch form values
+          this.budgetForm.patchValue({
+            group: selectedGroup,
+            title: budgetEntry.title,
+            value: budgetEntry.value
+          });
+        }
+      } else {
+        this.editMode = false;
+        this.showForm = false;
+        this.budgetEntryIndex = null;
+        this.budgetForm.reset();
+      }
+    });
+  }
 
   ngOnDestroy(): void {
     if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
@@ -75,19 +101,15 @@ export class Editbudget implements OnInit, OnDestroy {
     if (this.editMode && this.budgetEntryIndex === index) this.resetForm();
   }
 
-  onEdit(index: number): void {
-    this.startEdit(index);
-    // Optional: scroll to form
-    setTimeout(() => {
-      document.querySelector('form')?.scrollIntoView({ behavior: 'smooth' });
-    }, 0);
+  onEdit(id: number): void {
+    this.startEdit(id);
   }
 
-  private startEdit(index: number): void {
-    this.editMode = true;
-    this.showForm = true;
-    this.budgetEntryIndex = index;
-    const budgetEntry = this.budgetEntries[index];
+  private startEdit(id: number): void {
+    const budgetEntry = this.budgetEntries.find(be => be.id === id);
+    if (!budgetEntry) return;
+
+    this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
 
     const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
 
@@ -97,9 +119,11 @@ export class Editbudget implements OnInit, OnDestroy {
       value: budgetEntry.value
     });
 
-    // Update route to /edit-budget/:id
-    this.router.navigate(['/edit-budget', index], { replaceUrl: true });
+    this.paramId = id.toString();   // 🔥 make sure paramId is set
+    this.editMode = true;
+    this.showForm = true;
   }
+
 
   private resetForm(): void {
     this.editMode = false;
@@ -114,15 +138,26 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const newEntry = new BudgetEntry(1, formValue.group.name, formValue.title, formValue.value);
+    const entry = new BudgetEntry(
+      this.editMode ? +this.paramId : 1,
+      formValue.group.name,
+      formValue.title,
+      formValue.value
+    );
 
-    if (this.editMode && this.budgetEntryIndex !== null) {
-      this.budgetEntries[this.budgetEntryIndex] = newEntry;
-      this.budgetDataService.budgetSubject.next(this.budgetEntries);
+    if (this.editMode) {
+      // Update local array
+      if (this.budgetEntryIndex !== null) {
+        this.budgetEntries[this.budgetEntryIndex] = entry;
+        this.budgetDataService.budgetSubject.next(this.budgetEntries);
+      }
+      // Optional: update backend
+      this.budgetDataService.updateEntry(entry.id.toString(), entry);
     } else {
-      this.budgetDataService.onAddBudgetEntry(newEntry);
+      this.budgetDataService.onAddBudgetEntry(entry);
     }
 
     this.resetForm();
   }
+
 }

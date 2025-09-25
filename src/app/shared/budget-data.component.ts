@@ -44,12 +44,18 @@ export class BudgetDataService{
             });
          }
 
-
-        updateBudgetEntry(index: number, updatedEntry: BudgetEntry) {
-            if (index >= 0 && index < this.budgetEntries.length) {
-            this.budgetEntries[index] = updatedEntry;
-            this.budgetSubject.next(this.budgetEntries);
+        getBudgetEntry(id: number){
+            const index = this.budgetEntries.findIndex(el => {
+                return el.id == id; 
+            })
+            return this.budgetEntries[index];
         }
-}
+
+        updateEntry(id: string, entry: BudgetEntry) {
+        this.http.put<{message: string}>('http://localhost:3000/update-entry/' + id, entry).subscribe((jsonData) => {
+            console.log(jsonData.message);
+            this.getBudgetEntries();
+        })
+        }
 
 }

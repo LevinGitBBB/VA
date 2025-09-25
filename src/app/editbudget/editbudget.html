@@ -27,7 +27,7 @@
 </p>
 
 
-<div *ngIf="showForm" class="enter-container">
+<div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
   <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
     <div class="form-group">
       <label for="group">Group</label>

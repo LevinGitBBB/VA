@@ -38,6 +38,14 @@ app.delete('/remove-entry/:id', (req, res) => {
 
 })
 
+app.put('/update-entry/:id', (req, res) => {
+    const index = budgetEntries.findIndex(el => el.id == req.params.id);
+    budgetEntries[index] = {id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value};
+    console.log(budgetEntries[index])
+    res.status(200).json({ message: 'Update Completed' });
+});
+
+
 app.post('/add-entry', (req,res) =>{
     budgetEntries.push({id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value})
     res.status(200).json({
