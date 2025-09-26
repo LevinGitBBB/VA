@@ -42,21 +42,21 @@ app.get('/max-id', (req, res) => {
 })
 
 app.delete('/remove-entry/:id', (req, res) => {
-    const index =  budgetEntries.findIndex(el => {
-        return el.id == req.params.id; 
-    })
-    budgetEntries.splice(index, 1);
-    res.status(200).json({
+    BudgetEntryModel.deleteOne({_id: req.params.id})
+        .then (() => {
+                res.status(200).json({
         message: 'Post Deleted'
+        })
     })
-
 })
 
 app.put('/update-entry/:id', (req, res) => {
-    const index = budgetEntries.findIndex(el => el.id == req.params.id);
-    budgetEntries[index] = {id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value};
-    console.log(budgetEntries[index])
-    res.status(200).json({ message: 'Update Completed' });
+    const updatedEntry = new BudgetEntryModel({_id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value})
+    BudgetEntryModel.updateOne({_id: req.body.id}, updatedEntry)
+        .then(() => {
+            res.status(200).json({ message: 'Update Completed' 
+            });
+        })
 });
 
 

@@ -64,7 +64,7 @@ export class Editbudget implements OnInit, OnDestroy {
         this.paramId = paramMap.get('id')!;
 
         // Find the budget entry by ID
-        const budgetEntry = this.budgetDataService.getBudgetEntry(+this.paramId);
+        const budgetEntry = this.budgetDataService.getBudgetEntry(this.paramId);
         if (budgetEntry) {
           this.showForm = true; // ensures form shows immediately
           this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
@@ -96,16 +96,19 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.showForm) this.resetForm();
   }
 
-  onDelete(index: number): void {
-    this.budgetDataService.onDelete(index);
-    if (this.editMode && this.budgetEntryIndex === index) this.resetForm();
+  onDelete(id: string): void {
+    this.budgetDataService.onDelete(id);
+    if (this.editMode && this.paramId === id) {
+      this.resetForm();
+    }
   }
 
-  onEdit(id: number): void {
+
+  onEdit(id: string): void {
     this.startEdit(id);
   }
 
-  private startEdit(id: number): void {
+  private startEdit(id: string): void {
     const budgetEntry = this.budgetEntries.find(be => be.id === id);
     if (!budgetEntry) return;
 
@@ -119,7 +122,7 @@ export class Editbudget implements OnInit, OnDestroy {
       value: budgetEntry.value
     });
 
-    this.paramId = id.toString();   // 🔥 make sure paramId is set
+    this.paramId = id.toString();
     this.editMode = true;
     this.showForm = true;
   }
@@ -138,12 +141,7 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const entry = new BudgetEntry(
-      this.editMode ? +this.paramId : 1,
-      formValue.group.name,
-      formValue.title,
-      formValue.value
-    );
+    const entry = new BudgetEntry(this.editMode ? this.paramId : '', formValue.group.name, formValue.title, formValue.value);
 
     if (this.editMode) {
       // Update local array
@@ -152,7 +150,7 @@ export class Editbudget implements OnInit, OnDestroy {
         this.budgetDataService.budgetSubject.next(this.budgetEntries);
       }
       // Optional: update backend
-      this.budgetDataService.updateEntry(entry.id.toString(), entry);
+      this.budgetDataService.updateEntry(entry.id, entry);
     } else {
       this.budgetDataService.onAddBudgetEntry(entry);
     }

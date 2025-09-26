@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { BudgetEntry } from "./budget-entry.model";
-import { Subject } from "rxjs";
+import { map, Subject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
+import { ValueChangeEvent } from "@angular/forms";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
@@ -14,7 +15,7 @@ export class BudgetDataService{
 
         budgetEntries: BudgetEntry[] = [];
         
-        onDelete(id: number){
+        onDelete(id: string){
             this.http.delete<{message: string}>('http://localhost:3000/remove-entry/' + id).subscribe ((jsonData) =>{
                 console.log(jsonData.message);
                 this.getBudgetEntries();
@@ -22,7 +23,7 @@ export class BudgetDataService{
         }
 
         onAddBudgetEntry(budgetEntry: BudgetEntry){
-            this.http.get<{maxId: number}>('http://localhost:3000/max-id').subscribe((jsonData) => {
+            this.http.get<{maxId: string}>('http://localhost:3000/max-id').subscribe((jsonData) => {
                 budgetEntry.id = jsonData.maxId + 1;
 
                 this.http.post<{message: string}>('http://localhost:3000/add-entry', budgetEntry).subscribe ((jsonData) => {
@@ -37,13 +38,24 @@ export class BudgetDataService{
         }
 
         getBudgetEntries() {
-            this.http.get<{ budgetEntries: BudgetEntry[] }>('http://localhost:3000/budget-entries').subscribe((jsonData) => {
-                this.budgetEntries = jsonData.budgetEntries; 
+            this.http.get<{ budgetEntries: any}>('http://localhost:3000/budget-entries')
+            .pipe(map((responseData) => {
+                return responseData.budgetEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
+                    return {
+                        group: entry.group, 
+                        title: entry.title, 
+                        value: entry.value, 
+                        id: entry._id
+                    }
+                })
+            }))
+            .subscribe((updateResponse) => {
+                this.budgetEntries = updateResponse; 
                 this.budgetSubject.next(this.budgetEntries);
             });
          }
 
-        getBudgetEntry(id: number){
+        getBudgetEntry(id: string){
             const index = this.budgetEntries.findIndex(el => {
                 return el.id == id; 
             })
