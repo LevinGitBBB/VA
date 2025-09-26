@@ -17,28 +17,12 @@ mongoose.connect(connectionString)
         console.log('Error connecting to MongoDB')
     })
 
-budgetEntries = [
-    {id: 1, group: "Fixkosten", title: "Miete", value: 1450},
-    {id: 2, group: "Freizeit", title: "Netflix", value: 67},
-    {id: 3, group: "Freizeit", title: "Kino", value: 787}, 
-];
-
 app.use(bodyParser.json());
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     next();
-})
-
-app.get('/max-id', (req, res) => {
-    var max =0;
-    for (var i=0; i<budgetEntries.length; i++){
-        if(budgetEntries[i].id > max){
-            max = budgetEntries[i].id
-        }
-    }
-    res.json({maxId: max});
 })
 
 app.delete('/remove-entry/:id', (req, res) => {

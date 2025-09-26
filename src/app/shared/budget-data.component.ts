@@ -53,7 +53,8 @@ export class BudgetDataService{
                 this.budgetEntries = updateResponse; 
                 this.budgetSubject.next(this.budgetEntries);
             });
-         }
+        }
+
 
         getBudgetEntry(id: string){
             const index = this.budgetEntries.findIndex(el => {
