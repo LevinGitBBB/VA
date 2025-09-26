@@ -70,8 +70,24 @@ app.post('/add-entry', (req,res) =>{
         })
 })
 
+    const budgetEntry = new BudgetEntryModel({group: req.body.group, title: req.body.title, value: req.body.value});
+    budgetEntry.save()
+        .then(() => {
+                res.status(200).json({
+                    message: 'Post submitted'
+                })
+        })
+})
+
 
 app.get('/budget-entries', (req, res, next) => {
+    BudgetEntryModel.find()
+    .then((data) => {
+        res.json({'budgetEntries': data})
+    })
+    .catch(() => {
+        console.log('Error fetching entries')
+    })
     BudgetEntryModel.find()
     .then((data) => {
         res.json({'budgetEntries': data})
