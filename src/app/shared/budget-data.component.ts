@@ -37,8 +37,7 @@ export class BudgetDataService{
         }
 
         getBudgetEntries() {
-            this.http.get<{ budgetEntries: BudgetEntry[] }>('http://localhost:3000/budget-entries')
-                .subscribe((jsonData) => {
+            this.http.get<{ budgetEntries: BudgetEntry[] }>('http://localhost:3000/budget-entries').subscribe((jsonData) => {
                 this.budgetEntries = jsonData.budgetEntries; 
                 this.budgetSubject.next(this.budgetEntries);
             });

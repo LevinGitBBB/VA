@@ -1,7 +1,17 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const BudgetEntryModel = require('./entry-schema')
+const mongoose = require('mongoose');
 
 const app = express();
+
+mongoose.connect("mongodb+srv://lostertaginf22_db_user:0JizSqysE5kpCXJ1@cluster0.fizu1us.mongodb.net/budgetdb?retryWrites=true&w=majority&appName=Cluster0")
+    .then(() => {
+        console.log('Connected to MongoDB')
+    })
+    .catch(() => {
+        console.log('Error connecting to MongoDB')
+    })
 
 budgetEntries = [
     {id: 1, group: "Fixkosten", title: "Miete", value: 1450},
@@ -47,14 +57,24 @@ app.put('/update-entry/:id', (req, res) => {
 
 
 app.post('/add-entry', (req,res) =>{
-    budgetEntries.push({id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value})
-    res.status(200).json({
-        message: 'Post submitted'
-    })
+    const budgetEntry = new BudgetEntryModel({group: req.body.group, title: req.body.title, value: req.body.value});
+    budgetEntry.save()
+        .then(() => {
+                res.status(200).json({
+                    message: 'Post submitted'
+                })
+        })
 })
 
+
 app.get('/budget-entries', (req, res, next) => {
-    res.json({'budgetEntries': budgetEntries});
+    BudgetEntryModel.find()
+    .then((data) => {
+        res.json({'budgetEntries': data})
+    })
+    .catch(() => {
+        console.log('Error fetching entries')
+    })
 }) 
 
 module.exports = app; 
