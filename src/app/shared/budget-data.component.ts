@@ -23,15 +23,12 @@ export class BudgetDataService{
         }
 
         onAddBudgetEntry(budgetEntry: BudgetEntry){
-            this.http.get<{maxId: string}>('http://localhost:3000/max-id').subscribe((jsonData) => {
-                budgetEntry.id = jsonData.maxId + 1;
+
 
                 this.http.post<{message: string}>('http://localhost:3000/add-entry', budgetEntry).subscribe ((jsonData) => {
                     console.log(budgetEntry);
                     this.getBudgetEntries();
                 })
-
-            })
             
             this.budgetEntries.push(budgetEntry);
             this.budgetSubject.next(this.budgetEntries);
