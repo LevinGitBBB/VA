@@ -9,6 +9,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Home } from './home/home';
 import { HttpClientModule } from '@angular/common/http';
 import { Reader } from './reader/reader';
+import { NgApexchartsModule } from 'ng-apexcharts';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { Reader } from './reader/reader';
     BrowserModule,
     AppRoutingModule, 
     ReactiveFormsModule,
-    HttpClientModule
+    HttpClientModule, 
+    NgApexchartsModule  
   ],
   providers: [
     provideBrowserGlobalErrorListeners()
