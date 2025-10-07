@@ -6,7 +6,7 @@ import Tesseract from 'tesseract.js';
   selector: 'app-reader',
   standalone: false,
   templateUrl: './reader.html',
-  styleUrl: './reader.css'
+  styleUrls: ['./reader.css', '../ImportStyles/customButtons.css']
 })
 export class Reader {
 

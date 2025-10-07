@@ -1,10 +1,7 @@
 import { Component, ViewChild } from "@angular/core";
 import { ChartComponent } from "ng-apexcharts";
-import {
-  ApexNonAxisChartSeries,
-  ApexResponsive,
-  ApexChart
-} from "ng-apexcharts";
+import { BudgetDataService } from '../shared/budget-data.component';
+import {  ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
 
 
 export type ChartOptions = {
@@ -43,4 +40,10 @@ export class Home {
       ]
     };
   }
+
+  
+
+
+
+
 }
