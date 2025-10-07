@@ -28,13 +28,17 @@
     "@angular/forms": "^20.3.0",
     "@angular/platform-browser": "^20.3.0",
     "@angular/router": "^20.3.0",
+    "@genkit-ai/google-genai": "^1.21.0",
     "body-parser": "^2.2.0",
     "bootstrap": "^3.4.1",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
+    "genkit": "^1.21.0",
     "mongoose": "^8.18.2",
     "rxjs": "~7.8.0",
+    "tesseract.js": "^6.0.1",
     "tslib": "^2.3.0",
+    "zod": "^3.25.76",
     "zone.js": "~0.15.0"
   },
   "devDependencies": {

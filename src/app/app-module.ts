@@ -8,13 +8,15 @@ import { Editbudget } from './editbudget/editbudget';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Home } from './home/home';
 import { HttpClientModule } from '@angular/common/http';
+import { Reader } from './reader/reader';
 
 @NgModule({
   declarations: [
     App,
     Header,
     Editbudget,
-    Home
+    Home,
+    Reader
   ],
   imports: [
     BrowserModule,
