@@ -1,8 +1,15 @@
-<h2>Welcome to the VA of JM and LO</h2>
-
-<apx-chart
-  [series]="chartOptions.series!"
-  [chart]="chartOptions.chart!"
-  [labels]="chartOptions.labels!"
-  [responsive]="chartOptions.responsive!">
-</apx-chart>
+<div class="page-container">
+  <div class="content">
+    <!-- other content on the left -->
+  </div>
+  <div class="chart-wrapper">
+    <apx-chart
+      #chart
+      [series]="chartOptions.series!"
+      [chart]="chartOptions.chart!"
+      [labels]="chartOptions.labels!"
+      [colors]="chartOptions.colors!"
+      [responsive]="chartOptions.responsive!"
+    ></apx-chart>
+  </div>
+</div>
