@@ -7,9 +7,12 @@ import { Header } from './header/header';
 import { Editbudget } from './editbudget/editbudget';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Home } from './home/home';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { Reader } from './reader/reader';
 import { NgApexchartsModule } from 'ng-apexcharts';
+import { Login } from './login/login';
+import { SignUp } from './sign-up/sign-up';
+import { AuthInterceptor } from './shared/auth-interceptor';
 
 @NgModule({
   declarations: [
@@ -17,7 +20,9 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     Header,
     Editbudget,
     Home,
-    Reader
+    Reader,
+    Login,
+    SignUp
   ],
   imports: [
     BrowserModule,
@@ -27,6 +32,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
     NgApexchartsModule  
   ],
   providers: [
+    {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
     provideBrowserGlobalErrorListeners()
   ],
   bootstrap: [App]
