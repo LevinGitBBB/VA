@@ -5,18 +5,20 @@ import { Home } from './home/home';
 import { Reader } from './reader/reader';
 import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
+import { RouteGuard } from './shared/route-guard';
 
 const routes: Routes = [
-  { path: '', component: Home },      // Home page
-  { path: 'edit-budget', component: Editbudget }, // Edit Budget page
-  {path: "edit-budget/:id", component: Editbudget},
-  {path: "reader", component: Reader},
+  { path: '', component: Home, canActivate: [RouteGuard]},      
+  { path: 'edit-budget', component: Editbudget, canActivate: [RouteGuard]}, 
+  {path: "edit-budget/:id", component: Editbudget, canActivate: [RouteGuard]},
+  {path: "reader", component: Reader, canActivate: [RouteGuard]},
   {path: "login", component: Login},
   {path: "sign-up", component: SignUp}
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [RouteGuard]
 })
 export class AppRoutingModule {}

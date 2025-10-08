@@ -2,6 +2,7 @@ import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { AuthModel } from "./auth-model";
 import { Subject } from "rxjs";
+import { Router } from "@angular/router";
 
 
 @Injectable({providedIn:"root"})
@@ -21,7 +22,7 @@ export class AuthService{
         return this.token;
     }
 
-    constructor(private http: HttpClient){}
+    constructor(private http: HttpClient, private router: Router){}
 
     signupUser(username: string, password: string){
 
@@ -41,6 +42,7 @@ export class AuthService{
                 if(this.token){
                     this.authenticatedSub.next(true);
                     this.isAuthenticated = true;
+                    this.router.navigate(['/'])
                 }
             })
     }
