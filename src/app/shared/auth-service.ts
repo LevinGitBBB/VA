@@ -9,8 +9,11 @@ export class AuthService{
 
     private token: string; 
     private authenticatedSub = new Subject<boolean>();
-
+    private isAuthenticated = false; 
     
+    getIsAuthenticated(){
+        return this.isAuthenticated;
+    }
     getAuthenticatedSub(){
         return this.authenticatedSub.asObservable();
     }
@@ -37,6 +40,7 @@ export class AuthService{
                 this.token = res.token;
                 if(this.token){
                     this.authenticatedSub.next(true);
+                    this.isAuthenticated = true;
                 }
             })
     }

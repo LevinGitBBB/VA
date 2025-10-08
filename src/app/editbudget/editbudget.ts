@@ -4,6 +4,7 @@ import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
+import { AuthService } from '../shared/auth-service';
 
 
 @Component({
@@ -13,6 +14,9 @@ import { BudgetEntry } from '../shared/budget-entry.model';
   styleUrls: ['./editbudget.css', '../ImportStyles/customButtons.css']
 })
 export class Editbudget implements OnInit, OnDestroy {
+
+  private authenticationSub: Subscription; 
+  isAuthenticated = false;
 
   showForm = false;
   budgetEntries: BudgetEntry[] = [];
@@ -34,7 +38,8 @@ export class Editbudget implements OnInit, OnDestroy {
   constructor(
     private budgetDataService: BudgetDataService,
     private router: Router,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -85,10 +90,17 @@ export class Editbudget implements OnInit, OnDestroy {
         this.budgetForm.reset();
       }
     });
+
+    this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
+
+    })
+    this.isAuthenticated = this.authService.getIsAuthenticated();
+
   }
 
   ngOnDestroy(): void {
     if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
+    this.authenticationSub.unsubscribe();
   }
 
   toggleForm(): void {

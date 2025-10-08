@@ -1,53 +1,56 @@
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Group</th>
-      <th>Title</th>
-      <th>Value</th>
-      <th>Action</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr *ngFor="let budgetEntry of budgetEntries; let i = index">
-      <td>{{ budgetEntry.group }}</td>
-      <td>{{ budgetEntry.title }}</td>
-      <td>{{ budgetEntry.value }}</td>
-      <td>
-        <button (click)="onEdit(budgetEntry.id)" class="btn button4">Edit</button>
-        <button (click)="onDelete(budgetEntry.id)" class="btn button5">Delete</button>
-      </td>
-    </tr>
-  </tbody>
-</table>
-
-<p align="right" *ngIf="!editMode">
-  <button class="btn button2" (click)="toggleForm()">
-    {{ showForm ? 'X' : 'Add an Object' }}
-  </button>
-</p>
+<div *ngIf="isAuthenticated">
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Group</th>
+        <th>Title</th>
+        <th>Value</th>
+        <th *ngIf="isAuthenticated">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let budgetEntry of budgetEntries; let i = index">
+        <td>{{ budgetEntry.group }}</td>
+        <td>{{ budgetEntry.title }}</td>
+        <td>{{ budgetEntry.value }}</td>
+        <td>
+          <button (click)="onEdit(budgetEntry.id)" class="btn button4">Edit</button>
+          <button (click)="onDelete(budgetEntry.id)" class="btn button5">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
 
 
-<div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
-  <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
-    <div class="form-group">
-      <label for="group">Group</label>
-      <select id="group" class="form-control" formControlName="group">
-        <option [ngValue]="null" disabled>Select a group</option>
-        <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
-      </select>
+    <p align="right" *ngIf="!editMode">
+      <button class="btn button2" (click)="toggleForm()">
+        {{ showForm ? 'X' : 'Add an Object' }}
+      </button>
+    </p>
 
-      <label for="title">Title</label>
-      <input type="text" class="form-control" formControlName="title">
 
-      <label for="value">Value</label>
-      <input type="number" class="form-control" formControlName="value">
-      <div *ngIf="budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched" class="text-danger">
-        Value must be a number
+  <div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
+    <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
+      <div class="form-group">
+        <label for="group">Group</label>
+        <select id="group" class="form-control" formControlName="group">
+          <option [ngValue]="null" disabled>Select a group</option>
+          <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
+        </select>
+
+        <label for="title">Title</label>
+        <input type="text" class="form-control" formControlName="title">
+
+        <label for="value">Value</label>
+        <input type="number" class="form-control" formControlName="value">
+        <div *ngIf="budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched" class="text-danger">
+          Value must be a number
+        </div>
       </div>
-    </div>
 
-    <button class="btn btn-success" [disabled]="budgetForm.invalid">
-      {{ editMode ? 'Update Budget Point' : 'Add Budget Point' }}
-    </button>
-  </form>
+      <button class="btn btn-success" [disabled]="budgetForm.invalid">
+        {{ editMode ? 'Update Budget Point' : 'Add Budget Point' }}
+      </button>
+    </form>
+  </div>
 </div>
