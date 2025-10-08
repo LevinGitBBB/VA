@@ -1,4 +1,4 @@
-import { Component, ViewChild } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { ChartComponent } from "ng-apexcharts";
 import {  ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
 import { Subscription } from 'rxjs';
@@ -21,7 +21,7 @@ export type ChartOptions = {
   templateUrl: './home.html',
   styleUrls: ['./home.css']
 })
-export class Home {
+export class Home implements OnInit, OnDestroy {
 
 ngOnInit(): void {
   this.budgetDataService.getBudgetEntries();
@@ -68,5 +68,9 @@ ngOnInit(): void {
     };
   }
 
+
+  ngOnDestroy(): void {
+    if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
+  }
 
 }

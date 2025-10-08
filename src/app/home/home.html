@@ -2,8 +2,11 @@
   <div class="content">
     <!-- other content on the left -->
   </div>
+
   <div class="chart-wrapper">
+    <!-- Only render chart after data is ready -->
     <apx-chart
+      *ngIf="chartOptions?.series?.length"
       #chart
       [series]="chartOptions.series!"
       [chart]="chartOptions.chart!"

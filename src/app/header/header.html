@@ -3,11 +3,12 @@
     <a routerLink="" class="navbar-brand">My Budget</a>
   </div>
   <ul class="nav navbar-nav">
-    <li><a routerLink="edit-budget">Edit Budget</a></li>
-    <li><a routerLink="reader">Reader</a></li>
+    <li *ngIf="userAuthenticated"><a routerLink="edit-budget">Edit Budget</a></li>
+    <li *ngIf="userAuthenticated"><a routerLink="reader">Reader</a></li>
   </ul>
   <ul class="nav navbar-nav" style="float:right"> 
-    <li><a routerLink="login">Login</a></li>
-    <li><a routerLink="sign-up">Sign-Up</a></li>
+    <li *ngIf="!userAuthenticated"><a routerLink="login">Login</a></li>
+    <li *ngIf="!userAuthenticated"><a routerLink="sign-up">Sign-Up</a></li>
+    <li *ngIf="userAuthenticated"><a>Logout</a></li>
   </ul>
 </div>
