@@ -1,4 +1,5 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
+import { AuthService } from './shared/auth-service';
 
 @Component({
   selector: 'app-root',
@@ -6,7 +7,15 @@ import { Component, signal } from '@angular/core';
   standalone: false,
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
+  
+  
+  constructor(private authService: AuthService){}
+    
+  ngOnInit(): void {
+    this.authService.authenticateFromLocalStorage();
+  }
+
   protected readonly title = signal('VA');
 }
 

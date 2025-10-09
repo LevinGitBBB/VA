@@ -92,7 +92,7 @@ export class Editbudget implements OnInit, OnDestroy {
     });
 
     this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
-
+      this.isAuthenticated = status;
     })
     this.isAuthenticated = this.authService.getIsAuthenticated();
 
