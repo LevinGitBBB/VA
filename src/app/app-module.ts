@@ -13,6 +13,7 @@ import { NgApexchartsModule } from 'ng-apexcharts';
 import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
 import { AuthInterceptor } from './shared/auth-interceptor';
+import { Welcome } from './welcome/welcome';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AuthInterceptor } from './shared/auth-interceptor';
     Home,
     Reader,
     Login,
-    SignUp
+    SignUp,
+    Welcome
   ],
   imports: [
     BrowserModule,
