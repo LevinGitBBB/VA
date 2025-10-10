@@ -8,6 +8,7 @@ const UserModel = require('./user-model')
 const bcrypt = require('bcrypt')
 const jwt = require ('jsonwebtoken')
 const app = express();
+const checkAuth = require('./check-auth');
 
 mongoose.connect(connectionString)
     .then(() => {
@@ -44,39 +45,36 @@ app.put('/update-entry/:id', (req, res) => {
 });
 
 
-app.post('/add-entry', (req, res, next) => {
+app.post('/add-entry', checkAuth, (req, res) => {
+    const budgetEntry = new BudgetEntryModel({
+        userId: req.user.id,
+        group: req.body.group,
+        title: req.body.title,
+        value: req.body.value
+    });
 
-    try{
-        const token = req.headers.authorization;
-        jwt.verify(token, "secret_string")
-        next();
-    }
-    catch(err){
-        res.status(401).json({
-            message:"Error with Authentication token"
-        })
-    }
-
-}, (req,res) =>{
-    const budgetEntry = new BudgetEntryModel({group: req.body.group, title: req.body.title, value: req.body.value});
     budgetEntry.save()
         .then(() => {
-                res.status(200).json({
-                    message: 'Post submitted'
-                })
+            res.status(200).json({ message: 'Post submitted' });
         })
-})
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Error saving entry' });
+        });
+});
 
 
-app.get('/budget-entries', (req, res, next) => {
-    BudgetEntryModel.find()
-    .then((data) => {
-        res.json({'budgetEntries': data})
-    })
-    .catch(() => {
-        console.log('Error fetching entries')
-    })
-}) 
+
+app.get('/budget-entries', checkAuth, (req, res) => {
+    BudgetEntryModel.find({ userId: req.user.id })
+        .then((data) => {
+            res.json({ budgetEntries: data });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ message: 'Error fetching entries' });
+        });
+});
 
 
 app.post('/sign-up', (req, res) => {

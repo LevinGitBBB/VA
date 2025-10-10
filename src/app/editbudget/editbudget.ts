@@ -5,6 +5,7 @@ import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
+import { UserStoreService } from '../shared/user-store.service';
 
 
 @Component({
@@ -28,6 +29,7 @@ export class Editbudget implements OnInit, OnDestroy {
 
   private paramId: string; 
   budgetEntry: BudgetEntry; 
+  currentUserId: string;
 
   groups = [
     { id: 1, name: 'Fixkosten' },
@@ -39,7 +41,8 @@ export class Editbudget implements OnInit, OnDestroy {
     private budgetDataService: BudgetDataService,
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private authService: AuthService
+    private authService: AuthService,
+    private userStore: UserStoreService
   ) {}
 
   ngOnInit(): void {
@@ -96,6 +99,11 @@ export class Editbudget implements OnInit, OnDestroy {
     })
     this.isAuthenticated = this.authService.getIsAuthenticated();
 
+      this.userStore.getUserIdFromStore()
+      .subscribe(val=> {
+        let currentUserIdFromToken = this.authService.getUserIdFromToken();
+        this.currentUserId = val || currentUserIdFromToken
+      })
   }
 
   ngOnDestroy(): void {
@@ -153,7 +161,7 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const entry = new BudgetEntry(this.editMode ? this.paramId : '', formValue.group.name, formValue.title, formValue.value);
+    const entry = new BudgetEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
 
     if (this.editMode) {
       // Update local array

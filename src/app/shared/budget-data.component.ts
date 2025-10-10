@@ -3,17 +3,21 @@ import { BudgetEntry } from "./budget-entry.model";
 import { map, Subject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { ValueChangeEvent } from "@angular/forms";
+import { UserStoreService } from "./user-store.service";
+import { AuthService } from "./auth-service";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
 
         public maxId: number; 
 
-        constructor(private http: HttpClient){}
+        constructor(private http: HttpClient, private authService: AuthService){}
 
         budgetSubject = new Subject<BudgetEntry[]>();
 
         budgetEntries: BudgetEntry[] = [];
+
+
         
         onDelete(id: string){
             this.http.delete<{message: string}>('http://localhost:3000/remove-entry/' + id).subscribe ((jsonData) =>{
@@ -35,7 +39,17 @@ export class BudgetDataService{
         }
 
         getBudgetEntries() {
-            this.http.get<{ budgetEntries: any}>('http://localhost:3000/budget-entries')
+
+            const token = this.authService.getToken();
+
+            if (!token) {
+                console.error('No JWT token available. User might not be logged in.');
+                return;
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+            
+            this.http.get<{ budgetEntries: any}>('http://localhost:3000/budget-entries', { headers })
             .pipe(map((responseData) => {
                 return responseData.budgetEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
                     return {

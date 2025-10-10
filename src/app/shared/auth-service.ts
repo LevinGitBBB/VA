@@ -26,8 +26,10 @@ export class AuthService{
     }
 
     constructor(private http: HttpClient, private router: Router, private userStore: UserStoreService){
-            this.userPayload= this.decodedToken();
-
+        try{
+        this.userPayload= this.decodedToken();
+        }
+        catch{}
     }
 
     signupUser(username: string, password: string){
