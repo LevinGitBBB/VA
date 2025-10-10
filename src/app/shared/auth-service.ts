@@ -14,7 +14,8 @@ export class AuthService{
     private isAuthenticated = false; 
     private logoutTimer: any; 
     private userPayload: any;
-    
+    private localhost = "192.168.3.32"
+
     getIsAuthenticated(){
         return this.isAuthenticated;
     }
@@ -36,7 +37,7 @@ export class AuthService{
 
         const authData: AuthModel = {username: username, password: password};
 
-        this.http.post('http://localhost:3000/sign-up', authData).subscribe( res=> {
+        this.http.post(`http://${this.localhost}:3000/sign-up`, authData).subscribe( res=> {
             console.log(res);
         })
     }
@@ -44,7 +45,7 @@ export class AuthService{
     loginUser(username: string, password: string){
         const authData: AuthModel = {username: username, password: password}; 
 
-        this.http.post<{token: string, expiresIn: number}>('http://localhost:3000/login/', authData)
+        this.http.post<{token: string, expiresIn: number}>(`http://${this.localhost}:3000/login/`, authData)
             .subscribe(res => {
                 this.token = res.token;
                 if(this.token){

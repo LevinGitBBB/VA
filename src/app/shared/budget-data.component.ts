@@ -16,11 +16,11 @@ export class BudgetDataService{
         budgetSubject = new Subject<BudgetEntry[]>();
 
         budgetEntries: BudgetEntry[] = [];
-
+        private localhost = "192.168.3.32"
 
         
         onDelete(id: string){
-            this.http.delete<{message: string}>('http://localhost:3000/remove-entry/' + id).subscribe ((jsonData) =>{
+            this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-entry/` + id).subscribe ((jsonData) =>{
                 console.log(jsonData.message);
                 this.getBudgetEntries();
             }) 
@@ -29,7 +29,7 @@ export class BudgetDataService{
         onAddBudgetEntry(budgetEntry: BudgetEntry){
 
 
-                this.http.post<{message: string}>('http://localhost:3000/add-entry', budgetEntry).subscribe ((jsonData) => {
+                this.http.post<{message: string}>(`http://${this.localhost}:3000/add-entry`, budgetEntry).subscribe ((jsonData) => {
                     console.log(budgetEntry);
                     this.getBudgetEntries();
                 })
@@ -49,7 +49,7 @@ export class BudgetDataService{
 
             const headers = { Authorization: `Bearer ${token}` };
             
-            this.http.get<{ budgetEntries: any}>('http://localhost:3000/budget-entries', { headers })
+            this.http.get<{ budgetEntries: any}>(`http://${this.localhost}:3000/budget-entries`, { headers })
             .pipe(map((responseData) => {
                 return responseData.budgetEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
                     return {
@@ -75,7 +75,7 @@ export class BudgetDataService{
         }
 
         updateEntry(id: string, entry: BudgetEntry) {
-        this.http.put<{message: string}>('http://localhost:3000/update-entry/' + id, entry).subscribe((jsonData) => {
+        this.http.put<{message: string}>(`http://${this.localhost}:3000/update-entry/` + id, entry).subscribe((jsonData) => {
             console.log(jsonData.message);
             this.getBudgetEntries();
         })
