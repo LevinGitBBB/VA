@@ -1,11 +1,50 @@
 .page-container {
   display: flex;
-  justify-content: flex-end; /* pushes chart to the right */
-  align-items: flex-start;   /* optional vertical alignment */
+  justify-content: space-between; /* left content + right chart */
+  align-items: flex-start;
   width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+/* Left-side container */
+.content-box {
+  background-color: #f5f7ff;         /* soft blue background */
+  border-radius: 12px;               /* rounded corners */
+  padding: 20px 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  width: 250px;                      /* fixed width for nice layout */
+}
+
+/* Title */
+.content-box h4 {
+  margin-top: 0;
+  margin-bottom: 10px;
+  color: #2e3b55;
+}
+
+/* Test items */
+.test {
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+}
+
+/* Different colors for each test */
+.test1 {
+  background-color: #4b7bec; /* blue */
+}
+.test2 {
+  background-color: #20bf6b; /* green */
+}
+.test3 {
+  background-color: #eb3b5a; /* red */
+}
+
+/* Right-side chart area */
 .chart-wrapper {
-  max-width: 380px;          
+  max-width: 380px;
   margin: 35px;
 }

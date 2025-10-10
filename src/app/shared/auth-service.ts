@@ -3,7 +3,8 @@ import { Injectable } from "@angular/core";
 import { AuthModel } from "./auth-model";
 import { Subject } from "rxjs";
 import { Router } from "@angular/router";
-
+import { JwtHelperService } from "@auth0/angular-jwt"
+import { UserStoreService } from "./user-store.service";
 
 @Injectable({providedIn:"root"})
 export class AuthService{
@@ -12,6 +13,7 @@ export class AuthService{
     private authenticatedSub = new Subject<boolean>();
     private isAuthenticated = false; 
     private logoutTimer: any; 
+    private userPayload: any;
     
     getIsAuthenticated(){
         return this.isAuthenticated;
@@ -23,7 +25,10 @@ export class AuthService{
         return this.token;
     }
 
-    constructor(private http: HttpClient, private router: Router){}
+    constructor(private http: HttpClient, private router: Router, private userStore: UserStoreService){
+            this.userPayload= this.decodedToken();
+
+    }
 
     signupUser(username: string, password: string){
 
@@ -44,10 +49,14 @@ export class AuthService{
                     this.authenticatedSub.next(true);
                     this.isAuthenticated = true;
                     this.router.navigate(['/home'])
-                    this.logoutTimer = setTimeout(() => {this.logout()}, res.expiresIn * 1000)
+                    this.logoutTimer = setTimeout(() => {this.logout()}, res.expiresIn * 1000);
                     const now = new Date(); 
                     const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
                     this.storeLoginDetails(this.token, expiresDate)
+                    
+                    const tokenPayload = this.decodedToken();
+                    this.userStore.setFullNameForStore(tokenPayload.username)
+                    this.userStore.setUserIdForStore(tokenPayload.userId)
                 }
             })
     }
@@ -88,14 +97,37 @@ export class AuthService{
         const localStorageData = this.getLocalStorageData();
         if(localStorageData){
             const now = new Date();
-            const expiresIn = localStorageData.expiresIn.getTime() - now.getTime(); 
+            const expiresIn = localStorageData.expiresIn.getTime() - now.getTime();
 
             if(expiresIn > 0){
-                this.token = localStorageData.token; 
-                this.isAuthenticated = true; 
+                this.token = localStorageData.token;
+                this.isAuthenticated = true;
                 this.authenticatedSub.next(true);
-                this.logoutTimer.setTimeout(expiresIn / 1000);
+                this.logoutTimer = setTimeout(() => {
+                    this.logout();
+                }, expiresIn);
             }
         }
     }
+
+    decodedToken(){
+        const jwtHelper = new JwtHelperService();
+        const localStorageData= this.getLocalStorageData()!
+        const token = localStorageData.token; 
+        console.log(jwtHelper.decodeToken(token))
+        return jwtHelper.decodeToken(token)
+    }
+
+
+    getFullNameFromToken(){
+        if(this.userPayload)
+            return this.userPayload.username;
+    }
+
+    getUserIdFromToken(){
+        if(this.userPayload)
+            return this.userPayload.userId;
+    }
+
+
 }
