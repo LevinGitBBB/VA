@@ -1,7 +1,6 @@
 import { Component } from '@angular/core';
 import Tesseract from 'tesseract.js';
 import { ChangeDetectorRef } from '@angular/core';
-import { readReceipt } from '../shared/genkit/read-receipt';
 
 @Component({
   selector: 'app-reader',
