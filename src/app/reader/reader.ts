@@ -78,7 +78,7 @@ export class Reader {
   }
 
   gemini(){
-    console.log(readReceipt)
+    console.log()
   }
 
 }
