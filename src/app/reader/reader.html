@@ -1,2 +1,16 @@
 <p></p>
-<button class="btn button2" (click)="tesseract()"> Submit </button>
+<button (click)="gemini()">Test</button>
+<button (click)="openFilePicker()">Choose image</button>
+<img *ngIf="URL" [src]="URL" id="imageViewer" alt="preview" style="max-width:100%;max-height:400px;">
+
+<div></div>
+<div></div>
+
+<input
+  type="file"
+  accept="image/*"
+  id="imageCapturer"
+  style="display: none;"
+  (change)="useImage($event)">
+
+<!-- show preview -->
