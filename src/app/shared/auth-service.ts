@@ -5,6 +5,7 @@ import { Subject } from "rxjs";
 import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt"
 import { UserStoreService } from "./user-store.service";
+import { environment } from "./environment";
 
 @Injectable({providedIn:"root"})
 export class AuthService{
@@ -14,7 +15,8 @@ export class AuthService{
     private isAuthenticated = false; 
     private logoutTimer: any; 
     private userPayload: any;
-    private localhost = "192.168.3.32"
+
+    localhost = environment.host
 
     getIsAuthenticated(){
         return this.isAuthenticated;

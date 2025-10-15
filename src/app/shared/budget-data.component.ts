@@ -5,6 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { ValueChangeEvent } from "@angular/forms";
 import { UserStoreService } from "./user-store.service";
 import { AuthService } from "./auth-service";
+import { environment } from "./environment";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
@@ -16,7 +17,8 @@ export class BudgetDataService{
         budgetSubject = new Subject<BudgetEntry[]>();
 
         budgetEntries: BudgetEntry[] = [];
-        private localhost = "192.168.3.32"
+        localhost = environment.host
+
 
         
         onDelete(id: string){
