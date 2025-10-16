@@ -14,6 +14,7 @@ import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
 import { AuthInterceptor } from './shared/auth-interceptor';
 import { Welcome } from './welcome/welcome';
+import { NgToastModule} from 'ng-angular-popup'
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { Welcome } from './welcome/welcome';
     AppRoutingModule, 
     ReactiveFormsModule,
     HttpClientModule, 
-    NgApexchartsModule  
+    NgApexchartsModule,
+    NgToastModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},

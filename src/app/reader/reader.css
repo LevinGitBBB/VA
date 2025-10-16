@@ -12,9 +12,55 @@
   flex: 1; /* smaller left side */
 }
 
+
+/* Keep your existing loader styles */
+.loader {
+  width: 55px;
+  aspect-ratio: 1;
+  --g1: conic-gradient(from  90deg at 3px  3px ,#0000 90deg,#fff 0);
+  --g2: conic-gradient(from -90deg at 22px 22px,#0000 90deg,#fff 0);
+  background: var(--g1), var(--g1), var(--g1), var(--g2), var(--g2), var(--g2);
+  background-size: 25px 25px;
+  background-repeat: no-repeat;
+  animation: l7 1.5s infinite;
+}
+@keyframes l7 {
+  0%   {background-position:0    0   ,0 100%,100% 100% }
+  25%  {background-position:100% 0   ,0 100%,100% 100% }
+  50%  {background-position:100% 0   ,0 0   ,100% 100% }
+  75%  {background-position:100% 0   ,0 0   ,0    100% }
+  100% {background-position:100% 100%,0 0   ,0    100% }
+}
+
+/* Make sure form-wrapper allows absolute positioning */
 .form-wrapper {
-  flex: 2; /* makes it take twice as much space as .content */
-  max-width: none; /* remove the limit */
+  position: relative; /* important for loader-center to overlay correctly */
+  flex: 2;
+  max-width: none;
   width: 100%;
-  margin: 0; /* optional */
+}
+
+/* Centers loader inside form-wrapper */
+.loader-center {
+  position: absolute;
+  top: 100px;
+  left: 0;
+  width: 100%;
+  height: 100%;           /* full height of form-wrapper */
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  align-items: center;     /* vertical centering */
+  z-index: 10;
+}
+
+
+/* Center the button and make it wider */
+.file-picker-btn {
+  display: block;          /* makes margin auto work */
+  margin: 0 auto 20px;     /* centers horizontally, adds bottom margin */
+  width: 250px;            /* adjust width as needed */
+  max-width: 90%;          /* responsive on small screens */
+  text-align: center;      /* optional: center text */
+  padding: 10px 20px;      /* larger padding */
+  font-size: 16px;         /* bigger text */
 }

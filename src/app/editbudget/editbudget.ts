@@ -6,6 +6,7 @@ import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
+import { NgToastService } from 'ng-angular-popup';
 
 
 @Component({
@@ -42,7 +43,8 @@ export class Editbudget implements OnInit, OnDestroy {
     private router: Router,
     private activatedRoute: ActivatedRoute,
     private authService: AuthService,
-    private userStore: UserStoreService
+    private userStore: UserStoreService,
+    private toast: NgToastService
   ) {}
 
   ngOnInit(): void {
@@ -118,6 +120,7 @@ export class Editbudget implements OnInit, OnDestroy {
 
   onDelete(id: string): void {
     this.budgetDataService.onDelete(id);
+    this.toast.success(String("Budget-Point removed"),  'Success', 5000);
     if (this.editMode && this.paramId === id) {
       this.resetForm();
     }
@@ -169,8 +172,10 @@ export class Editbudget implements OnInit, OnDestroy {
         this.budgetDataService.budgetSubject.next(this.budgetEntries);
       }
       this.budgetDataService.updateEntry(entry.id, entry);
+      this.toast.success(String("Budget-Point updated"),  'Success', 5000);
     } else {
       this.budgetDataService.onAddBudgetEntry(entry);
+      this.toast.success(String("Budget-Point added"),  'Success', 5000);
     }
 
     this.resetForm();

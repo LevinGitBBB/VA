@@ -16,3 +16,11 @@ body {
 button {
   color: var(--text-color);
 }
+
+/* Make all toasts bigger */
+.ng-toast {
+  font-size: 18px !important;       /* larger text */
+  padding: 20px 25px !important;    /* more space */
+  border-radius: 8px !important;    /* rounded corners */
+  max-width: 500px !important;      /* optional, wider toast */
+}

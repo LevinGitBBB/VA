@@ -6,6 +6,8 @@ import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
+import { NgToastService } from 'ng-angular-popup'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-reader',
@@ -29,7 +31,15 @@ export class Reader {
   URL: string | null = null;
   geminiTotal: string | null = null; // store Gemini response
 
-  constructor(private cd: ChangeDetectorRef, private geminiService: GeminiService, private budgetDataService: BudgetDataService, private authService: AuthService, private userStore: UserStoreService) {}
+  constructor(
+    private cd: ChangeDetectorRef, 
+    private geminiService: GeminiService, 
+    private budgetDataService: BudgetDataService, 
+    private authService: AuthService, 
+    private userStore: UserStoreService,
+    private toast: NgToastService,
+    private router: Router,
+  ) {}
 
 
   ngOnInit(){
@@ -97,10 +107,11 @@ export class Reader {
         this.budgetForm.patchValue({
           value: this.geminiTotal
         });
-
+        
         this.showForm = true
       },
       error: (err) => {
+        this.toast.danger(String(err),  'Error', 5000);
         console.error("Error calling Gemini API:", err);
       }
     });
@@ -119,9 +130,9 @@ export class Reader {
     const entry = new BudgetEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
 
     this.budgetDataService.onAddBudgetEntry(entry);
+    this.toast.success(String("Budget-Point added"),  'Success', 5000);
+    this.showForm = false;
+    this.showButton = true;
+    this.URL = null; 
   }
-
-
-
-
 }

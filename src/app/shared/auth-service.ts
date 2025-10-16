@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { JwtHelperService } from "@auth0/angular-jwt"
 import { UserStoreService } from "./user-store.service";
 import { environment } from "./environment";
+import { NgToastService } from "ng-angular-popup";
 
 @Injectable({providedIn:"root"})
 export class AuthService{
@@ -28,7 +29,7 @@ export class AuthService{
         return this.token;
     }
 
-    constructor(private http: HttpClient, private router: Router, private userStore: UserStoreService){
+    constructor(private http: HttpClient, private router: Router, private userStore: UserStoreService, private toast: NgToastService){
         try{
         this.userPayload= this.decodedToken();
         }
@@ -58,10 +59,10 @@ export class AuthService{
                     const now = new Date(); 
                     const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
                     this.storeLoginDetails(this.token, expiresDate)
-                    
                     const tokenPayload = this.decodedToken();
                     this.userStore.setFullNameForStore(tokenPayload.username)
                     this.userStore.setUserIdForStore(tokenPayload.userId)
+                    this.toast.success(String("Successfully logged in"),  'Success', 5000);
                 }
             })
     }
@@ -73,6 +74,8 @@ export class AuthService{
         this.router.navigate(['/welcome']);
         clearTimeout(this.logoutTimer);
         this.clearLoginDetails();
+        this.toast.success(String("Successfully logged out"),  'Success', 5000);
+
     }
 
     storeLoginDetails(token: string, expirationDate: Date){

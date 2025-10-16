@@ -1,5 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { AuthService } from './shared/auth-service';
+import { ToasterPosition } from 'ng-angular-popup';
 
 @Component({
   selector: 'app-root',
@@ -17,5 +18,7 @@ export class App implements OnInit{
   }
 
   protected readonly title = signal('VA');
+
+  ToasterPosition = ToasterPosition; 
 }
 
