@@ -1,15 +1,35 @@
-<p></p>
-<button (click)="openFilePicker()">Choose image</button>
-<img *ngIf="URL" [src]="URL" id="imageViewer" alt="preview" style="max-width:100%;max-height:400px;">
+<div class="page-container">
+  <div class="content">
+    <button *ngIf="showButton" (click)="openFilePicker()">Choose image</button>
+    <img *ngIf="URL" [src]="URL" id="imageViewer" alt="preview" style="max-width:100%;max-height:5;">
 
-<div></div>
-<div></div>
+    <input
+      type="file"
+      accept="image/*"
+      id="imageCapturer"
+      style="display: none;"
+      (change)="useImage($event)">
 
-<input
-  type="file"
-  accept="image/*"
-  id="imageCapturer"
-  style="display: none;"
-  (change)="useImage($event)">
+  </div>
 
-<!-- show preview -->
+  <div class="form-wrapper">
+    <div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
+      <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
+        <div class="form-group">
+          <label for="group">Group</label>
+          <select id="group" class="form-control" formControlName="group">
+            <option [ngValue]="null" disabled>Select a group</option>
+            <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
+          </select>
+
+          <label for="title">Title</label>
+          <input type="text" class="form-control" formControlName="title">
+
+          <label for="value">Value</label>
+          <input type="number" class="form-control" formControlName="value">
+          <div *ngIf="budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched" class="text-danger">
+            Value must be a number
+          </div>
+        </div>
+
+        <button class="btn btn-success" [disabled]="budgetForm.invalid"> Add Budget Point</button>

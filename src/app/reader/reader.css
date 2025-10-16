@@ -1,0 +1,20 @@
+.page-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  padding: 20px;
+  box-sizing: border-box;
+  gap: 30px; /* space between left and right */
+}
+
+.content {
+  flex: 1; /* smaller left side */
+}
+
+.form-wrapper {
+  flex: 2; /* makes it take twice as much space as .content */
+  max-width: none; /* remove the limit */
+  width: 100%;
+  margin: 0; /* optional */
+}

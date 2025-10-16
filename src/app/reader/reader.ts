@@ -1,6 +1,11 @@
 import { Component } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { GeminiService } from '../shared/gemini-generation.component';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { BudgetDataService } from '../shared/budget-data.component';
+import { BudgetEntry } from '../shared/budget-entry.model';
+import { AuthService } from '../shared/auth-service';
+import { UserStoreService } from '../shared/user-store.service';
 
 @Component({
   selector: 'app-reader',
@@ -10,10 +15,34 @@ import { GeminiService } from '../shared/gemini-generation.component';
 })
 export class Reader {
 
+    groups = [
+    { id: 1, name: 'Fixkosten' },
+    { id: 2, name: 'Freizeit' },
+    { id: 3, name: 'Miete' },
+  ];
+
+  currentUserId: string;
+  budgetEntry: BudgetEntry;
+  budgetForm: FormGroup;
+  showForm = false;
+  showButton = true;
   URL: string | null = null;
   geminiTotal: string | null = null; // store Gemini response
 
-  constructor(private cd: ChangeDetectorRef, private geminiService: GeminiService) {}
+  constructor(private cd: ChangeDetectorRef, private geminiService: GeminiService, private budgetDataService: BudgetDataService, private authService: AuthService, private userStore: UserStoreService) {}
+
+
+  ngOnInit(){
+    this.budgetForm = new FormGroup({
+    group: new FormControl(null, Validators.required),
+    title: new FormControl(null, Validators.required),
+    value: new FormControl(null, [
+      Validators.required,
+      Validators.pattern(/^-?\d+(\.\d+)?$/)
+    ])
+  });
+  }
+
 
   // Opens the hidden file input
   openFilePicker(): void {
@@ -57,17 +86,42 @@ export class Reader {
 
   // Converts Data URL to Base64 and calls Gemini backend
   private sendToGemini(dataUrl: string): void {
+    this.showButton = false;
     const base64Image = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
 
     this.geminiService.getBillValue(base64Image).subscribe({
       next: (response) => {
         console.log("Gemini response (total):", response);
         this.geminiTotal = response; // save for template display
+
+        this.budgetForm.patchValue({
+          value: this.geminiTotal
+        });
+
+        this.showForm = true
       },
       error: (err) => {
         console.error("Error calling Gemini API:", err);
       }
     });
   }
+
+  onSubmit(): void {
+      this.userStore.getUserIdFromStore()
+      .subscribe(val=> {
+        let currentUserIdFromToken = this.authService.getUserIdFromToken();
+        this.currentUserId = val || currentUserIdFromToken
+      })
+
+    if (!this.budgetForm.valid) return;
+
+    const formValue = this.budgetForm.value;
+    const entry = new BudgetEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+
+    this.budgetDataService.onAddBudgetEntry(entry);
+  }
+
+
+
 
 }

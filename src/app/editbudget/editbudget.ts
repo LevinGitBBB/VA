@@ -153,7 +153,6 @@ export class Editbudget implements OnInit, OnDestroy {
     this.budgetEntryIndex = null;
     this.budgetForm.reset();
     this.showForm = false;
-    // Reset route to /edit-budget without id
     this.router.navigate(['/edit-budget'], { replaceUrl: true });
   }
 
@@ -169,7 +168,6 @@ export class Editbudget implements OnInit, OnDestroy {
         this.budgetEntries[this.budgetEntryIndex] = entry;
         this.budgetDataService.budgetSubject.next(this.budgetEntries);
       }
-      // Optional: update backend
       this.budgetDataService.updateEntry(entry.id, entry);
     } else {
       this.budgetDataService.onAddBudgetEntry(entry);
