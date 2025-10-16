@@ -1,4 +1,5 @@
 require('dotenv').config(); 
+const generateExplanation = require('./gemini');
 const express = require('express');
 const bodyParser = require('body-parser');
 const BudgetEntryModel = require('./entry-schema')
@@ -10,6 +11,7 @@ const jwt = require ('jsonwebtoken')
 const app = express();
 const checkAuth = require('./check-auth');
 
+
 mongoose.connect(connectionString)
     .then(() => {
         console.log('Connected to MongoDB')
@@ -18,13 +20,15 @@ mongoose.connect(connectionString)
         console.log('Error connecting to MongoDB')
     })
 
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '10mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '10mb' }));
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
     res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     next();
 })
+
 
 app.delete('/remove-entry/:id', (req, res) => {
     BudgetEntryModel.deleteOne({_id: req.params.id})
@@ -135,6 +139,23 @@ app.post('/login', (req,res) => {
         })
     })
 })
+
+app.post('/bill-value', checkAuth, async (req, res) => {
+  try {
+    const { prompt, image } = req.body;
+
+    if (!prompt) return res.status(400).json({ message: "Missing prompt" });
+
+    const responseText = await generateExplanation(prompt, image);
+
+    res.status(200).json({ response: responseText });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Error generating response" });
+  }
+});
+
+
 
 
 module.exports = app; 

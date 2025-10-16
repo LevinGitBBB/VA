@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import Tesseract from 'tesseract.js';
 import { ChangeDetectorRef } from '@angular/core';
+import { GeminiService } from '../shared/gemini-generation.component';
 
 @Component({
   selector: 'app-reader',
@@ -11,10 +11,17 @@ import { ChangeDetectorRef } from '@angular/core';
 export class Reader {
 
   URL: string | null = null;
+  geminiTotal: string | null = null; // store Gemini response
 
+  constructor(private cd: ChangeDetectorRef, private geminiService: GeminiService) {}
 
-  constructor(private cd: ChangeDetectorRef) {}
+  // Opens the hidden file input
+  openFilePicker(): void {
+    const el = document.getElementById('imageCapturer') as HTMLInputElement | null;
+    el?.click();
+  }
 
+  // Triggered when the user selects a file
   useImage(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (!input.files || input.files.length === 0) {
@@ -31,12 +38,14 @@ export class Reader {
 
     const reader = new FileReader();
 
-    // simplest, avoids event typing issues:
     reader.onload = () => {
-      // reader.result may be string | ArrayBuffer | null
+      // Save Base64 URL
       this.URL = typeof reader.result === 'string' ? reader.result : null;
-      // Tell Angular to check the component (OnPush)
       this.cd.markForCheck();
+
+      if (this.URL) {
+        this.sendToGemini(this.URL); // send the image to backend immediately
+      }
     };
 
     reader.onerror = (err) => {
@@ -44,41 +53,21 @@ export class Reader {
     };
 
     reader.readAsDataURL(file);
-
-    const { createWorker } = Tesseract;
-    (async () => {
-      const worker = await createWorker('eng');
-      const { data: { text } } = await worker.recognize(file);
-      this.getTotal(text);
-      console.log(text)
-    })();
-  
   }
 
-  // helper to open the hidden input from a visible button
-  openFilePicker(): void {
-    const el = document.getElementById('imageCapturer') as HTMLInputElement | null;
-    el?.click();
-  }
+  // Converts Data URL to Base64 and calls Gemini backend
+  private sendToGemini(dataUrl: string): void {
+    const base64Image = dataUrl.includes(',') ? dataUrl.split(',')[1] : dataUrl;
 
-  getTotal(text: string): void{
-    const regex = /^[^\S\r\n]*[=:;\-~>]*\s*total[\s:=-]+([\p{Sc}]?\s*(?:[A-Za-z]{2,4}\s*)?\d[\d\s.,]*\s*(?:[A-Za-z]{1,4}\.?)?)\s*$/gimu;
-    let match = regex.exec(text);
-
-    if (match) {
-      if (match[1]) {
-        console.log("Captured amount:", match[1]);
-      } else {
-        console.log("Full match:", match[0]);
+    this.geminiService.getBillValue(base64Image).subscribe({
+      next: (response) => {
+        console.log("Gemini response (total):", response);
+        this.geminiTotal = response; // save for template display
+      },
+      error: (err) => {
+        console.error("Error calling Gemini API:", err);
       }
-    } else {
-      console.log("No total found");
-    }
-
-  }
-
-  gemini(){
-    console.log()
+    });
   }
 
 }
