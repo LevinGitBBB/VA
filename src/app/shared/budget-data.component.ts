@@ -6,6 +6,7 @@ import { ValueChangeEvent } from "@angular/forms";
 import { UserStoreService } from "./user-store.service";
 import { AuthService } from "./auth-service";
 import { environment } from "./environment";
+import { AusgabenEntry } from "./ausgaben-entry.model";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
@@ -15,28 +16,47 @@ export class BudgetDataService{
         constructor(private http: HttpClient, private authService: AuthService){}
 
         budgetSubject = new Subject<BudgetEntry[]>();
+        ausgabenSubject = new Subject<AusgabenEntry[]>();
+
 
         budgetEntries: BudgetEntry[] = [];
+        ausgabenEntries: AusgabenEntry[] = [];
+
         localhost = environment.host
 
 
         
-        onDelete(id: string){
+        onDeleteBudgetEntries(id: string){
             this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-entry/` + id).subscribe ((jsonData) =>{
                 console.log(jsonData.message);
                 this.getBudgetEntries();
             }) 
         }
 
+        onDeleteAusgabenEntries(id: string){
+            this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-ausgaben/` + id).subscribe ((jsonData) =>{
+                console.log(jsonData.message);
+                this.getAusgabenEntries();
+            }) 
+        }        
+
         onAddBudgetEntry(budgetEntry: BudgetEntry){
-
-
                 this.http.post<{message: string}>(`http://${this.localhost}:3000/add-entry`, budgetEntry).subscribe ((jsonData) => {
                     console.log(budgetEntry);
                     this.getBudgetEntries();
                 })
             
             this.budgetEntries.push(budgetEntry);
+            this.budgetSubject.next(this.budgetEntries);
+        }
+
+        onAddAusgabenEntry(ausgabenEntry: AusgabenEntry){
+                this.http.post<{message: string}>(`http://${this.localhost}:3000/add-ausgabe`, ausgabenEntry).subscribe ((jsonData) => {
+                    console.log(ausgabenEntry);
+                    this.getBudgetEntries();
+                })
+            
+            this.budgetEntries.push(ausgabenEntry);
             this.budgetSubject.next(this.budgetEntries);
         }
 
@@ -68,6 +88,33 @@ export class BudgetDataService{
             });
         }
 
+        getAusgabenEntries() {
+
+            const token = this.authService.getToken();
+
+            if (!token) {
+                console.error('No JWT token available. User might not be logged in.');
+                return;
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+            
+            this.http.get<{ ausgabenEntries: any}>(`http://${this.localhost}:3000/ausgaben-entries`, { headers })
+            .pipe(map((responseData) => {
+                return responseData.ausgabenEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
+                    return {
+                        group: entry.group, 
+                        title: entry.title, 
+                        value: entry.value, 
+                        id: entry._id
+                    }
+                })
+            }))
+            .subscribe((updateResponse) => {
+                this.ausgabenEntries = updateResponse; 
+                this.ausgabenSubject.next(this.ausgabenEntries);
+            });
+        }
 
         getBudgetEntry(id: string){
             const index = this.budgetEntries.findIndex(el => {
@@ -76,10 +123,24 @@ export class BudgetDataService{
             return this.budgetEntries[index];
         }
 
-        updateEntry(id: string, entry: BudgetEntry) {
+        getAusgabenEntry(id: string){
+            const index = this.ausgabenEntries.findIndex(el => {
+                return el.id == id; 
+            })
+            return this.ausgabenEntries[index];
+        }
+
+        updateBudgetEntry(id: string, entry: BudgetEntry) {
         this.http.put<{message: string}>(`http://${this.localhost}:3000/update-entry/` + id, entry).subscribe((jsonData) => {
             console.log(jsonData.message);
             this.getBudgetEntries();
+        })
+        }
+
+        updateAusgabenEntry(id: string, entry: AusgabenEntry) {
+        this.http.put<{message: string}>(`http://${this.localhost}:3000/update-ausgaben/` + id, entry).subscribe((jsonData) => {
+            console.log(jsonData.message);
+            this.getAusgabenEntries();
         })
         }
 

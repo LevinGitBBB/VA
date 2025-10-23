@@ -3,11 +3,11 @@ import { ChangeDetectorRef } from '@angular/core';
 import { GeminiService } from '../shared/gemini-generation.component';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { BudgetDataService } from '../shared/budget-data.component';
-import { BudgetEntry } from '../shared/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup'
 import { Router } from '@angular/router';
+import { AusgabenEntry } from '../shared/ausgaben-entry.model';
 
 @Component({
   selector: 'app-reader',
@@ -24,7 +24,7 @@ export class Reader {
   ];
 
   currentUserId: string;
-  budgetEntry: BudgetEntry;
+  ausgabenEntry: AusgabenEntry;
   budgetForm: FormGroup;
   showForm = false;
   showButton = true;
@@ -127,10 +127,10 @@ export class Reader {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const entry = new BudgetEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+    const entry = new AusgabenEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
 
-    this.budgetDataService.onAddBudgetEntry(entry);
-    this.toast.success(String("Budget-Point added"),  'Success', 5000);
+    this.budgetDataService.onAddAusgabenEntry(entry);
+    this.toast.success(String("Ausgabe added"),  'Success', 5000);
     this.showForm = false;
     this.showButton = true;
     this.URL = null; 

@@ -14,7 +14,8 @@ import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
 import { AuthInterceptor } from './shared/auth-interceptor';
 import { Welcome } from './welcome/welcome';
-import { NgToastModule} from 'ng-angular-popup'
+import { NgToastModule} from 'ng-angular-popup';
+import { Ausgaben } from './ausgaben/ausgaben'
 
 @NgModule({
   declarations: [
@@ -25,7 +26,8 @@ import { NgToastModule} from 'ng-angular-popup'
     Reader,
     Login,
     SignUp,
-    Welcome
+    Welcome,
+    Ausgaben
   ],
   imports: [
     BrowserModule,

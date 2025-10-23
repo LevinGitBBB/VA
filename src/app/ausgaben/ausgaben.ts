@@ -3,33 +3,32 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { BudgetDataService } from '../shared/budget-data.component';
-import { BudgetEntry } from '../shared/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup';
-
+import { AusgabenEntry } from '../shared/ausgaben-entry.model';
 
 @Component({
-  selector: 'app-editbudget',
-  templateUrl: './editbudget.html',
+  selector: 'app-ausgaben',
   standalone: false,
-  styleUrls: ['./editbudget.css', '../ImportStyles/customButtons.css']
+  templateUrl: './ausgaben.html',
+  styleUrls: ['./ausgaben.css', '../ImportStyles/customButtons.css']
 })
-export class Editbudget implements OnInit, OnDestroy {
+export class Ausgaben implements OnInit, OnDestroy {
 
   private authenticationSub: Subscription; 
   isAuthenticated = false;
 
   showForm = false;
-  budgetEntries: BudgetEntry[] = [];
-  budgetSubscription: Subscription;
+  ausgabenEntries: AusgabenEntry[] = [];
+  ausgabenSubscription: Subscription;
 
-  budgetForm: FormGroup;
+  ausgabenForm: FormGroup;
   editMode = false;
-  budgetEntryIndex: number | null = null;
+  ausgabenEntryIndex: number | null = null;
 
   private paramId: string; 
-  budgetEntry: BudgetEntry; 
+  ausgabeEntry: AusgabenEntry; 
   currentUserId: string;
 
   groups = [
@@ -48,17 +47,17 @@ export class Editbudget implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.budgetDataService.getBudgetEntries();
+    this.budgetDataService.getAusgabenEntries();
 
     // 2️⃣ Subscribe to budget entries updates
-    this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
-      (entries: BudgetEntry[]) => {
-        this.budgetEntries = entries;
+    this.ausgabenSubscription = this.budgetDataService.ausgabenSubject.subscribe(
+      (entries: AusgabenEntry[]) => {
+        this.ausgabenEntries = entries;
       }
     );
 
     // 3️⃣ Initialize the form
-    this.budgetForm = new FormGroup({
+    this.ausgabenForm = new FormGroup({
       group: new FormControl(null, Validators.required),
       title: new FormControl(null, Validators.required),
       value: new FormControl(null, [
@@ -74,25 +73,25 @@ export class Editbudget implements OnInit, OnDestroy {
         this.paramId = paramMap.get('id')!;
 
         // Find the budget entry by ID
-        const budgetEntry = this.budgetDataService.getBudgetEntry(this.paramId);
-        if (budgetEntry) {
+        const ausgabenEntry = this.budgetDataService.getAusgabenEntry(this.paramId);
+        if (ausgabenEntry) {
           this.showForm = true; // ensures form shows immediately
-          this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
+          this.ausgabenEntryIndex = this.ausgabenEntries.indexOf(ausgabenEntry);
 
-          const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
+          const selectedGroup = this.groups.find(g => g.name === ausgabenEntry.group) || null;
 
           // Patch form values
-          this.budgetForm.patchValue({
+          this.ausgabenForm.patchValue({
             group: selectedGroup,
-            title: budgetEntry.title,
-            value: budgetEntry.value
+            title: ausgabenEntry.title,
+            value: ausgabenEntry.value
           });
         }
       } else {
         this.editMode = false;
         this.showForm = false;
-        this.budgetEntryIndex = null;
-        this.budgetForm.reset();
+        this.ausgabenEntryIndex = null;
+        this.ausgabenForm.reset();
       }
     });
 
@@ -109,7 +108,7 @@ export class Editbudget implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
+    if (this.ausgabenSubscription) this.ausgabenSubscription.unsubscribe();
     this.authenticationSub.unsubscribe();
   }
 
@@ -119,8 +118,8 @@ export class Editbudget implements OnInit, OnDestroy {
   }
 
   onDelete(id: string): void {
-    this.budgetDataService.onDeleteBudgetEntries(id);
-    this.toast.success(String("Budget-Point removed"),  'Success', 5000);
+    this.budgetDataService.onDeleteAusgabenEntries(id);
+    this.toast.success(String("Ausgabe removed"),  'Success', 5000);
     if (this.editMode && this.paramId === id) {
       this.resetForm();
     }
@@ -132,17 +131,17 @@ export class Editbudget implements OnInit, OnDestroy {
   }
 
   private startEdit(id: string): void {
-    const budgetEntry = this.budgetEntries.find(be => be.id === id);
-    if (!budgetEntry) return;
+    const ausgabenEntry = this.ausgabenEntries.find(be => be.id === id);
+    if (!ausgabenEntry) return;
 
-    this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
+    this.ausgabenEntryIndex = this.ausgabenEntries.indexOf(ausgabenEntry);
 
-    const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
+    const selectedGroup = this.groups.find(g => g.name === ausgabenEntry.group) || null;
 
-    this.budgetForm.patchValue({
+    this.ausgabenForm.patchValue({
       group: selectedGroup,
-      title: budgetEntry.title,
-      value: budgetEntry.value
+      title: ausgabenEntry.title,
+      value: ausgabenEntry.value
     });
 
     this.paramId = id.toString();
@@ -153,29 +152,29 @@ export class Editbudget implements OnInit, OnDestroy {
 
   private resetForm(): void {
     this.editMode = false;
-    this.budgetEntryIndex = null;
-    this.budgetForm.reset();
+    this.ausgabenEntryIndex = null;
+    this.ausgabenForm.reset();
     this.showForm = false;
     this.router.navigate(['/edit-budget'], { replaceUrl: true });
   }
 
   onSubmit(): void {
-    if (!this.budgetForm.valid) return;
+    if (!this.ausgabenForm.valid) return;
 
-    const formValue = this.budgetForm.value;
-    const entry = new BudgetEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+    const formValue = this.ausgabenForm.value;
+    const entry = new AusgabenEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
 
     if (this.editMode) {
       // Update local array
-      if (this.budgetEntryIndex !== null) {
-        this.budgetEntries[this.budgetEntryIndex] = entry;
-        this.budgetDataService.budgetSubject.next(this.budgetEntries);
+      if (this.ausgabenEntryIndex !== null) {
+        this.ausgabenEntries[this.ausgabenEntryIndex] = entry;
+        this.budgetDataService.budgetSubject.next(this.ausgabenEntries);
       }
-      this.budgetDataService.updateBudgetEntry(entry.id, entry);
-      this.toast.success(String("Budget-Point updated"),  'Success', 5000);
+      this.budgetDataService.updateAusgabenEntry(entry.id, entry);
+      this.toast.success(String("Ausgabe updated"),  'Success', 5000);
     } else {
-      this.budgetDataService.onAddBudgetEntry(entry);
-      this.toast.success(String("Budget-Point added"),  'Success', 5000);
+      this.budgetDataService.onAddAusgabenEntry(entry);
+      this.toast.success(String("Ausgabe added"),  'Success', 5000);
     }
 
     this.resetForm();

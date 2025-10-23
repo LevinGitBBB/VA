@@ -3,6 +3,7 @@ const generateExplanation = require('./gemini');
 const express = require('express');
 const bodyParser = require('body-parser');
 const BudgetEntryModel = require('./entry-schema')
+const AusgabenEntryModel =require('./ausgaben-schema')
 const mongoose = require('mongoose');
 const connectionString = process.env.CONNECTION_STRING;
 const UserModel = require('./user-model')
@@ -80,6 +81,59 @@ app.get('/budget-entries', checkAuth, (req, res) => {
         });
 });
 
+/////////////////////////////////////////////////////////////////////////////
+
+app.delete('/remove-ausgaben/:id', (req, res) => {
+    AusgabenEntryModel.deleteOne({_id: req.params.id})
+        .then (() => {
+                res.status(200).json({
+        message: 'Post Deleted'
+        })
+    })
+})
+
+app.put('/update-ausgaben/:id', (req, res) => {
+    const updatedEntry = new AusgabenEntryModel({_id: req.body.id, group: req.body.group, title: req.body.title, value: req.body.value})
+    AusgabenEntryModel.updateOne({_id: req.body.id}, updatedEntry)
+        .then(() => {
+            res.status(200).json({ message: 'Update Completed' 
+            });
+        })
+});
+
+
+app.post('/add-ausgabe', checkAuth, (req, res) => {
+    const ausgabenEntry = new AusgabenEntryModel({
+        userId: req.user.id,
+        group: req.body.group,
+        title: req.body.title,
+        value: req.body.value
+    });
+
+    ausgabenEntry.save()
+        .then(() => {
+            res.status(200).json({ message: 'Post submitted' });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Error saving entry' });
+        });
+});
+
+
+
+app.get('/ausgaben-entries', checkAuth, (req, res) => {
+    AusgabenEntryModel.find({ userId: req.user.id })
+        .then((data) => {
+            res.json({ ausgabenEntries: data });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ message: 'Error fetching entries' });
+        });
+});
+
+//////////////////////////////////////////////////////////////////////////////
 
 app.post('/sign-up', (req, res) => {
 

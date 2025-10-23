@@ -7,12 +7,14 @@ import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
 import { RouteGuard } from './shared/route-guard';
 import { Welcome } from './welcome/welcome';
+import { Ausgaben } from './ausgaben/ausgaben';
 
 const routes: Routes = [
   { path: '', component: Welcome},      
   { path: 'edit-budget', component: Editbudget, canActivate: [RouteGuard]}, 
   {path: "edit-budget/:id", component: Editbudget, canActivate: [RouteGuard]},
   {path: "reader", component: Reader, canActivate: [RouteGuard]},
+  {path: "ausgaben", component: Ausgaben, canActivate: [RouteGuard]},
   {path: "login", component: Login},
   {path: "sign-up", component: SignUp},
   {path: "welcome", component: Welcome},
