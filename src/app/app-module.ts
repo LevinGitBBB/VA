@@ -15,7 +15,14 @@ import { SignUp } from './sign-up/sign-up';
 import { AuthInterceptor } from './shared/auth-interceptor';
 import { Welcome } from './welcome/welcome';
 import { NgToastModule} from 'ng-angular-popup';
-import { Ausgaben } from './ausgaben/ausgaben'
+import { Ausgaben } from './ausgaben/ausgaben';
+import { MatTableModule } from '@angular/material/table';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatButtonModule } from '@angular/material/button';
+import { FormsModule } from '@angular/forms';
+
 
 @NgModule({
   declarations: [
@@ -35,7 +42,13 @@ import { Ausgaben } from './ausgaben/ausgaben'
     ReactiveFormsModule,
     HttpClientModule, 
     NgApexchartsModule,
-    NgToastModule
+    NgToastModule,
+    MatTableModule,
+    BrowserAnimationsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    FormsModule
   ],
   providers: [
     {provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true},
