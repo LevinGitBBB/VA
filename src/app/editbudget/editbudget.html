@@ -1,5 +1,22 @@
 <div *ngIf="isAuthenticated">
-  <div>Budget: 1200</div>
+
+  
+  <!-- Income Section -->
+  <div class="income-form">
+    <mat-form-field appearance="fill" class="w-48">
+      <mat-label>Monthly Income</mat-label>
+      <input
+        matInput
+      [(ngModel)]="income"
+      (click)="toggleIncomeSave()"
+      />
+    </mat-form-field>
+    <button *ngIf="showIncomeSave" mat-raised-button color="btn button2" (click)="saveIncome()">
+      Save Income
+    </button>
+  </div>
+
+
   <table class="table table-bordered">
     <thead>
       <tr>

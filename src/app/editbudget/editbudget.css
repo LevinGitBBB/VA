@@ -53,3 +53,8 @@ button{
 .hidden {
   display: none;
 }
+
+
+.income-form{
+  float: right;
+}

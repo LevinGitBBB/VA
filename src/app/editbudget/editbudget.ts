@@ -23,11 +23,11 @@ export class Editbudget implements OnInit, OnDestroy {
   showForm = false;
   budgetEntries: BudgetEntry[] = [];
   budgetSubscription: Subscription;
-
+  income: number; 
   budgetForm: FormGroup;
   editMode = false;
   budgetEntryIndex: number | null = null;
-
+  showIncomeSave = false;
   private paramId: string; 
   budgetEntry: BudgetEntry; 
   currentUserId: string;
@@ -181,4 +181,12 @@ export class Editbudget implements OnInit, OnDestroy {
     this.resetForm();
   }
 
+  toggleIncomeSave(){
+    this.showIncomeSave = !this.showIncomeSave
+  }
+
+  saveIncome(): void{
+    console.log(this.income)
+    this.showIncomeSave = false;
+  }
 }
