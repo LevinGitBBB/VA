@@ -17,8 +17,10 @@ export class BudgetDataService{
 
         budgetSubject = new Subject<BudgetEntry[]>();
         ausgabenSubject = new Subject<AusgabenEntry[]>();
+        incomeSubject = new Subject<number>();
 
 
+        income: number; 
         budgetEntries: BudgetEntry[] = [];
         ausgabenEntries: AusgabenEntry[] = [];
 
@@ -142,6 +144,33 @@ export class BudgetDataService{
             console.log(jsonData.message);
             this.getAusgabenEntries();
         })
+        }
+
+        setIncome(income: number) {
+        this.http.post<{ message: string }>(`http://${this.localhost}:3000/upload-income`, { income }).subscribe((jsonData) => {
+            console.log("Saved Income as: " + income + "CHF");
+            this.getIncome();
+            });
+        }
+
+        getIncome() {
+            const token = this.authService.getToken();
+
+            if (!token) {
+                console.error('No JWT token available. User might not be logged in.');
+                return;
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+
+            this.http.get<{ income: number }>(`http://${this.localhost}:3000/income`, { headers })
+                .pipe(
+                    map((responseData) => { return responseData.income;})
+                )
+                .subscribe((incomeValue) => {
+                    this.income = incomeValue;
+                    this.incomeSubject.next(this.income);
+                });
         }
 
 }

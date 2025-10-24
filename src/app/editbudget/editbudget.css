@@ -58,3 +58,28 @@ button{
 .income-form{
   float: right;
 }
+
+
+.income-form mat-form-field input.mat-input-element {
+    text-align: right; /* Aligns the input value to the right */
+    vertical-align: middle; /* Ensures vertical alignment */
+}
+
+mat-form-field .mat-form-field-suffix {
+    display: flex;
+    align-items: center; /* Vertically centers the CHF */
+}
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+.no-arrows[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+.no-arrows {
+  appearance: textfield !important;
+}

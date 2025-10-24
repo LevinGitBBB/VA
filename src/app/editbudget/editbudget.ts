@@ -23,6 +23,7 @@ export class Editbudget implements OnInit, OnDestroy {
   showForm = false;
   budgetEntries: BudgetEntry[] = [];
   budgetSubscription: Subscription;
+  incomeSubscription: Subscription;
   income: number; 
   budgetForm: FormGroup;
   editMode = false;
@@ -49,11 +50,18 @@ export class Editbudget implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.budgetDataService.getBudgetEntries();
+    this.budgetDataService.getIncome();
 
     // 2️⃣ Subscribe to budget entries updates
     this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
       (entries: BudgetEntry[]) => {
         this.budgetEntries = entries;
+      }
+    );
+
+    this.incomeSubscription = this.budgetDataService.incomeSubject.subscribe(
+      (incomeValue: number) => {
+        this.income = incomeValue;
       }
     );
 
@@ -181,12 +189,16 @@ export class Editbudget implements OnInit, OnDestroy {
     this.resetForm();
   }
 
-  toggleIncomeSave(){
-    this.showIncomeSave = !this.showIncomeSave
+  enableIncomeSave(){
+    this.showIncomeSave = true
   }
 
   saveIncome(): void{
-    console.log(this.income)
-    this.showIncomeSave = false;
+    if(this.income){
+      this.budgetDataService.setIncome(this.income)
+      this.showIncomeSave = false;
+    }else{
+      this.toast.danger(String("Only Numbers are accepted as Valid Income"),  'Error', 5000);
+    }
   }
 }

@@ -159,7 +159,6 @@ app.post('/sign-up', (req, res) => {
         })
 })
 
-
 app.post('/login', (req,res) => {
 
     let userFound;
@@ -193,6 +192,38 @@ app.post('/login', (req,res) => {
         })
     })
 })
+
+app.post('/upload-income', checkAuth, async (req, res) => {
+  try {
+    const { income } = req.body;
+
+    if (income == null) {
+      return res.status(400).json({ message: 'Income is required' });
+    }
+
+    await UserModel.updateOne(
+      { _id: req.user.id },
+      { $set: { income: income } }
+    );
+
+    res.status(200).json({ message: 'Income updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error updating income' });
+  }
+});
+
+
+app.get('/income', checkAuth, async (req, res) => {
+  try {
+    const user = await UserModel.findById(req.user.id).select('income');
+    res.status(200).json({ income: user.income });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Error fetching income' });
+  }
+});
+
 
 app.post('/bill-value', checkAuth, async (req, res) => {
   try {
