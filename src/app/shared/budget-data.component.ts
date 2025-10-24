@@ -58,8 +58,8 @@ export class BudgetDataService{
                     this.getBudgetEntries();
                 })
             
-            this.budgetEntries.push(ausgabenEntry);
-            this.budgetSubject.next(this.budgetEntries);
+            this.ausgabenEntries.push(ausgabenEntry);
+            this.ausgabenSubject.next(this.ausgabenEntries);
         }
 
         getBudgetEntries() {

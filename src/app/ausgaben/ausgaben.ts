@@ -12,7 +12,7 @@ import { AusgabenEntry } from '../shared/ausgaben-entry.model';
   selector: 'app-ausgaben',
   standalone: false,
   templateUrl: './ausgaben.html',
-  styleUrls: ['./ausgaben.css', '../ImportStyles/customButtons.css']
+  styleUrls: ['../layout/layout.css', './ausgaben.css', '../ImportStyles/customButtons.css']
 })
 export class Ausgaben implements OnInit, OnDestroy {
 
@@ -22,7 +22,7 @@ export class Ausgaben implements OnInit, OnDestroy {
   showForm = false;
   ausgabenEntries: AusgabenEntry[] = [];
   ausgabenSubscription: Subscription;
-
+  editingEntryId: string; 
   ausgabenForm: FormGroup;
   editMode = false;
   ausgabenEntryIndex: number | null = null;
@@ -127,6 +127,7 @@ export class Ausgaben implements OnInit, OnDestroy {
 
 
   onEdit(id: string): void {
+    this.editingEntryId = id;
     this.startEdit(id);
   }
 
@@ -155,7 +156,7 @@ export class Ausgaben implements OnInit, OnDestroy {
     this.ausgabenEntryIndex = null;
     this.ausgabenForm.reset();
     this.showForm = false;
-    this.router.navigate(['/edit-budget'], { replaceUrl: true });
+    this.router.navigate(['/ausgaben'], { replaceUrl: true });
   }
 
   onSubmit(): void {
@@ -176,7 +177,7 @@ export class Ausgaben implements OnInit, OnDestroy {
       this.budgetDataService.onAddAusgabenEntry(entry);
       this.toast.success(String("Ausgabe added"),  'Success', 5000);
     }
-
+    
     this.resetForm();
   }
 

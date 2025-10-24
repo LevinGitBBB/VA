@@ -1,0 +1,31 @@
+<div class="wrapper">
+
+  <!-- SIDEBAR -->
+  <div class="sidenav">
+    <div class="logo">BP</div>
+    <div class="spacer"></div>
+    <button *ngIf="!userAuthenticated" class="mbtn" [routerLink]="['/welcome']"><i class="fa fa-list icon"></i> Welcome</button>
+    <button *ngIf="!userAuthenticated" class="mbtn" [routerLink]="['/login']"><i class="fa fa-user icon"></i> Login</button>
+    <button *ngIf="!userAuthenticated"class="mbtn" [routerLink]="['/sign-up']"><i class="fa fa-bolt icon"></i> Sign Up</button>
+
+
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/home']"><i class="fa fa-list icon"></i> Home </button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/ausgaben']"><i class="fa fa-shopping-cart icon"></i> Ausgaben </button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/reader']"><i class="fa fa-user icon"></i> Reader</button>
+    <button *ngIf="userAuthenticated"class="mbtn" [routerLink]="['/edit-budget']"><i class="fa fa-calculator icon"></i> Budget</button>
+    <button *ngIf="userAuthenticated" class="mbtn" (click)="logout()"><i class="fa fa-calendar icon"></i> Logout</button>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="content-area">
+    <div class="mobilebar">
+      <div class="logo sml">iX</div>
+      <div class="mbh">
+        <button class="mnubtn" (click)="slideMenu()"><i class="fa fa-bars"></i></button>
+      </div>
+    </div>
+
+    <!-- PAGE CONTENT WILL BE INJECTED HERE -->
+    <router-outlet></router-outlet>
+  </div>
+</div>

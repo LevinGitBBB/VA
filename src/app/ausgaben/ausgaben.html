@@ -1,32 +1,45 @@
 <div *ngIf="isAuthenticated">
-  <table class="table table-bordered">
-    <thead>
-      <tr>
-        <th>Group</th>
-        <th>Title</th>
-        <th>Value</th>
-        <th *ngIf="isAuthenticated">Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let ausgabenEntry of ausgabenEntries; let i = index">
-        <td>{{ ausgabenEntry.group }}</td>
-        <td>{{ ausgabenEntry.title }}</td>
-        <td>{{ ausgabenEntry.value }}</td>
-        <td>
-          <button (click)="onEdit(ausgabenEntry.id)" class="btn button4">Edit</button>
-          <button (click)="onDelete(ausgabenEntry.id)" class="btn button5">Delete</button>
-        </td>
-      </tr>
-    </tbody>
-  </table>
 
+  <div class="page-title">Ausgaben</div>
+  <div class="page-desc">View and manage your Ausgaben </div>
+    <div *ngIf="!editMode">
+        <div *ngFor="let ausgabenEntry of ausgabenEntries; let i = index">
+        <div class="content-bar">
+          <div class="itemtitle">{{ ausgabenEntry.group }}</div>
+          <div class="itemstock">{{ ausgabenEntry.title }}</div>
+          <div class="itemprice">{{ ausgabenEntry.value }} CHF</div>
+          <div class="btncontainer">
+          <button (click)="onEdit(ausgabenEntry.id)" class="cbbtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <button (click)="onDelete(ausgabenEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <p align="right" *ngIf="!editMode">
-      <button class="btn button2" (click)="toggleForm()">
-        {{ showForm ? 'X' : 'Add an Object' }}
-      </button>
-    </p>
+      <!-- Edit mode: show only the entry being edited -->
+  <div *ngIf="editMode">
+    <div *ngFor="let ausgabenEntry of ausgabenEntries">
+      <div *ngIf="ausgabenEntry.id === editingEntryId" class="content-bar">
+        <div class="itemtitle">{{ ausgabenEntry.group }}</div>
+        <div class="itemstock">{{ ausgabenEntry.title }}</div>
+        <div class="itemprice">{{ ausgabenEntry.value }} CHF</div>
+        <div class="btncontainer">
+          <button (click)="onEdit(ausgabenEntry.id)" class="cbbtn">
+            <i class="fa fa-pencil" aria-hidden="true"></i>
+          </button>
+          <button (click)="onDelete(ausgabenEntry.id)" class="cbbtn">
+            <i class="fa fa-trash-o" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <p class="right-p"  *ngIf="!editMode">
+    <button class="btn button2" (click)="toggleForm()">
+      {{ showForm ? 'X' : 'Add an Object' }}
+    </button>
+  </p>
 
 
   <div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
@@ -54,3 +67,5 @@
     </form>
   </div>
 </div>
+
+

@@ -1,16 +1,10 @@
 /* Light mode (default) */
 :root {
   --bg-color: #090116;
-  --text-color: #fff;
+  --text-color: #000000;
   --primary-color: #008cff;
   --secondary-color: #737594;
-}
 
-/* Apply variables */
-body {
-  background-color: var(--bg-color);
-  color: var(--text-color);
-  transition: background-color 0.3s, color 0.3s;
 }
 
 button {
@@ -23,4 +17,27 @@ button {
   padding: 20px 25px !important;    /* more space */
   border-radius: 8px !important;    /* rounded corners */
   max-width: 500px !important;      /* optional, wider toast */
+}
+
+body {
+  background: linear-gradient(#150430, #090116) fixed;
+  color: var(--text-color);
+  font-family: 'Rubik', sans-serif;
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* The main floating window */
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  background: none;
+  border-radius: 12px;
+  overflow: hidden;
+  width: calc(100vw - 80px); /* space left and right */
+  height: calc(100vh - 80px); /* space top and bottom */
+  box-shadow: 0 6px 25px rgba(0, 0, 0, 0.3);
 }

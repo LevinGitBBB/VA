@@ -40,9 +40,14 @@ export class AuthService{
 
         const authData: AuthModel = {username: username, password: password};
 
-        this.http.post(`http://${this.localhost}:3000/sign-up`, authData).subscribe( res=> {
-            console.log(res);
-        })
+        this.http.post(`http://${this.localhost}:3000/sign-up`, authData).subscribe({
+            next: (res) => {
+                this.toast.success(String("Thank you for signing up"),  'Success', 5000);
+            },
+            error: (err) => {
+                this.toast.danger(String("This Username has already been used"),  'Error Signing up', 5000);
+            }
+        });
     }
 
     loginUser(username: string, password: string){
