@@ -22,6 +22,9 @@ body {
   overflow-y: auto;
   box-shadow: 2px 0 10px rgba(0,0,0,0.06);
   padding-bottom: 40px;
+  display: flex;
+  flex-direction: column;
+  height: 50hv;
 }
 
 /* MOBILE SLIDE MENU */
@@ -85,23 +88,32 @@ body {
 
 /* MENU BUTTONS */
 .mbtn {
-  border-radius:12px;
-  text-align:left;
-  margin-left:20px;
-  width:210px;
-  height:40px;
-  border:none;
-  background:none;
-  font-family:'Rubik', sans-serif;
-  font-size:18px;
-  color:#d0d4d9;
-  cursor:pointer;
+  display: flex;                /* makes icon + text align on one line */
+  align-items: center;          /* vertical center */
+  border-radius: 12px;
+  text-align: left;
+  margin-left: 20px;
+  width: 210px;
+  height: 40px;
+  border: none;
+  background: none;
+  font-family: 'Rubik', sans-serif;
+  font-size: 18px;
+  color: #d0d4d9;
+  cursor: pointer;
+  gap: 10px;                    /* consistent space between icon and text */
+  padding: 0 10px;              /* internal spacing */
 }
+
 .mbtn:hover { background:#f6f6fc; color:black; }
 .mbtn:hover i { color:#3895e0; }
 .mbtn:focus { background:#3a94de; color:white; cursor:pointer; }
 .mbtn:focus i { color:white; }
-.icon { padding:0 10px 0 20px; color:#b4b9bf; }
+.icon {
+  color: #b4b9bf;
+  width: 20px;          /* gives every icon the same width for alignment */
+  text-align: center;
+}
 
 /* ITEM BARS */
 .content-bar {
@@ -140,4 +152,9 @@ body {
   .mobilebar { display:block; }
   .content-bar { grid-template-columns: 0fr 1fr 0fr; }
   .itemprice, .itemstock { display:none; }
+}
+
+
+.logout-btn{
+  margin-top: auto;
 }

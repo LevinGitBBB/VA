@@ -13,7 +13,7 @@ import { NgToastService } from 'ng-angular-popup';
   selector: 'app-editbudget',
   templateUrl: './editbudget.html',
   standalone: false,
-  styleUrls: ['./editbudget.css', '../ImportStyles/customButtons.css']
+  styleUrls: ['./editbudget.css', '../ImportStyles/customButtons.css', '../layout/layout.css', '../ImportStyles/customButtons.css']
 })
 export class Editbudget implements OnInit, OnDestroy {
 
@@ -32,6 +32,7 @@ export class Editbudget implements OnInit, OnDestroy {
   private paramId: string; 
   budgetEntry: BudgetEntry; 
   currentUserId: string;
+  editingEntryId: string; 
 
   groups = [
     { id: 1, name: 'Fixkosten' },
@@ -136,6 +137,7 @@ export class Editbudget implements OnInit, OnDestroy {
 
 
   onEdit(id: string): void {
+    this.editingEntryId = id;
     this.startEdit(id);
   }
 
@@ -197,6 +199,8 @@ export class Editbudget implements OnInit, OnDestroy {
     if(this.income){
       this.budgetDataService.setIncome(this.income)
       this.showIncomeSave = false;
+      this.toast.success(String("Updated Income"),  'Success', 5000);
+
     }else{
       this.toast.danger(String("Only Numbers are accepted as Valid Income"),  'Error', 5000);
     }

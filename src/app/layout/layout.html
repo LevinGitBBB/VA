@@ -10,11 +10,10 @@
 
 
     <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/home']"><i class="fa fa-list icon"></i> Home </button>
-    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/ausgaben']"><i class="fa fa-shopping-cart icon"></i> Ausgaben </button>
-    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/reader']"><i class="fa fa-user icon"></i> Reader</button>
-    <button *ngIf="userAuthenticated"class="mbtn" [routerLink]="['/edit-budget']"><i class="fa fa-calculator icon"></i> Budget</button>
-    <button *ngIf="userAuthenticated" class="mbtn" (click)="logout()"><i class="fa fa-calendar icon"></i> Logout</button>
-  </div>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/ausgaben']"><i class="fa fa-shopping-cart icon"></i> Ausgaben</button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/reader']"><i class="fa fa-user icon"></i> Reader </button>
+    <button *ngIf="userAuthenticated"class="mbtn" [routerLink]="['/edit-budget']"><i class="fa fa-calculator icon"></i> Edit Budget</button>
+    <button *ngIf="userAuthenticated" class="mbtn logout-btn" (click)="logout()"><i class="fa fa-sign-out icon"></i> Logout</button></div>
 
   <!-- CONTENT AREA -->
   <div class="content-area">
