@@ -20,7 +20,6 @@ import { AppRoutingModule } from './app-routing-module';
 // Components
 import { App } from './app';
 import { Layout } from './layout/layout';
-import { Header } from './header/header';
 import { Home } from './home/home';
 import { Login } from './login/login';
 import { SignUp } from './sign-up/sign-up';
@@ -37,7 +36,6 @@ import { Groups } from './groups/groups';
   declarations: [
     App,
     Layout,
-    Header,
     Home,
     Login,
     SignUp,
