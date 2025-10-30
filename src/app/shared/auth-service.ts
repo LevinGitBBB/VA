@@ -51,7 +51,6 @@ export class AuthService{
                     this.authenticatedSub.next(true);
                     this.isAuthenticated = true;
                     this.router.navigate(['/home'])
-                    this.logoutTimer = setTimeout(() => {this.logout()}, res.expiresIn * 1000);
                     const now = new Date(); 
                     const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
                     this.storeLoginDetails(this.token, expiresDate)
