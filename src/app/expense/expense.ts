@@ -6,7 +6,7 @@ import { BudgetDataService } from '../shared/budget-data.component';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup';
-import { ExpenseEntry } from '../shared/expense-entry.model';
+import { ExpenseEntry } from '../shared/models/expense-entry.model';
 
 @Component({
   selector: 'app-expense',

@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
-import { BudgetEntry } from "./budget-entry.model";
+import { BudgetEntry } from "./models/budget-entry.model";
 import { map, Subject } from "rxjs";
 import { HttpClient } from "@angular/common/http";
 import { ValueChangeEvent } from "@angular/forms";
 import { UserStoreService } from "./user-store.service";
 import { AuthService } from "./auth-service";
 import { environment } from "./environment";
-import { ExpenseEntry } from "./expense-entry.model";
+import { ExpenseEntry } from "./models/expense-entry.model";
+import { GroupEntry } from "./models/group-entry.model";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
@@ -17,12 +18,14 @@ export class BudgetDataService{
 
         budgetSubject = new Subject<BudgetEntry[]>();
         expenseSubject = new Subject<ExpenseEntry[]>();
+        groupSubject = new Subject<GroupEntry[]>();
         incomeSubject = new Subject<number>();
 
 
         income: number; 
         budgetEntries: BudgetEntry[] = [];
         expenseEntries: ExpenseEntry[] = [];
+        groupEntries: GroupEntry[] = [];
 
         localhost = environment.host
 
@@ -172,5 +175,52 @@ export class BudgetDataService{
                     this.incomeSubject.next(this.income);
                 });
         }
+
+        /////////////////////Groups/////////////////////////////
+        onAddGroupEntry(groupEntry: GroupEntry){
+            this.http.post<{message: string}>(`http://${this.localhost}:3000/add-group`, groupEntry).subscribe ((jsonData) => {
+                this.getBudgetEntries();
+            })
+            
+            this.groupEntries.push(groupEntry);
+            this.groupSubject.next(this.groupEntries);
+        }
+
+        onDeleteGroupEntries(id: string){
+            this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-group/` + id).subscribe ((jsonData) =>{
+                console.log(jsonData.message);
+                this.getGroupEntries();
+            }) 
+        }
+
+        getGroupEntries() {
+
+            const token = this.authService.getToken();
+
+            if (!token) {
+                console.error('No JWT token available. User might not be logged in.');
+                return;
+            }
+
+            const headers = { Authorization: `Bearer ${token}` };
+            
+            this.http.get<{ groupEntries: any}>(`http://${this.localhost}:3000/group-entries`, { headers })
+            .pipe(map((responseData) => {
+                return responseData.groupEntries.map((entry: {groupName: string; _id: string}) => {
+                    return {
+                        groupName: entry.groupName, 
+                        id: entry._id
+                    }
+                })
+            }))
+            .subscribe((updateResponse) => {
+                this.groupEntries = updateResponse; 
+                this.groupSubject.next(this.groupEntries);
+            });
+        }
+
+
+
+
 
 }

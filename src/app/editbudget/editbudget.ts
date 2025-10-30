@@ -3,7 +3,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Router, ActivatedRoute, ParamMap } from '@angular/router';
 import { BudgetDataService } from '../shared/budget-data.component';
-import { BudgetEntry } from '../shared/budget-entry.model';
+import { BudgetEntry } from '../shared/models/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup';

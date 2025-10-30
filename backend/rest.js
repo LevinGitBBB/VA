@@ -2,11 +2,12 @@ require('dotenv').config();
 const generateExplanation = require('./gemini');
 const express = require('express');
 const bodyParser = require('body-parser');
-const BudgetEntryModel = require('./entry-schema')
-const ExpenseEntryModel =require('./expense-schema')
+const BudgetEntryModel = require('./schemas/entry-schema')
+const ExpenseEntryModel =require('./schemas/expense-schema')
+const GroupEntryModel = require ('./schemas/group-schema')
 const mongoose = require('mongoose');
 const connectionString = process.env.CONNECTION_STRING;
-const UserModel = require('./user-model')
+const UserModel = require('./schemas/user-model')
 const bcrypt = require('bcrypt')
 const jwt = require ('jsonwebtoken')
 const app = express();
@@ -240,6 +241,46 @@ app.post('/bill-value', checkAuth, async (req, res) => {
     res.status(500).json({ message: "Error generating response" });
   }
 });
+
+////////////////////////////////////GROUPS////////////////////////////////////////////////////
+
+app.post('/add-group', checkAuth, (req, res) => {
+    const groupEntry = new GroupEntryModel({
+        userId: req.user.id,
+        groupName: req.body.groupName,
+    });
+
+    groupEntry.save()
+        .then(() => {
+            res.status(200).json({ message: 'Post submitted' });
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).json({ message: 'Error saving group' });
+        });
+});
+
+
+
+app.get('/group-entries', checkAuth, (req, res) => {
+    GroupEntryModel.find({ userId: req.user.id })
+        .then((data) => {
+            res.json({ groupEntries: data });
+        })
+        .catch((err) => {
+            console.error(err);
+            res.status(500).json({ message: 'Error fetching entries' });
+        });
+});
+
+app.delete('/remove-group/:id', (req, res) => {
+    GroupEntryModel.deleteOne({_id: req.params.id})
+        .then (() => {
+                res.status(200).json({
+        message: 'Post Deleted'
+        })
+    })
+})
 
 
 

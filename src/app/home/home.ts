@@ -3,7 +3,7 @@ import { ChartComponent } from "ng-apexcharts";
 import {  ApexNonAxisChartSeries, ApexResponsive, ApexChart } from "ng-apexcharts";
 import { Subscription } from 'rxjs';
 import { BudgetDataService } from '../shared/budget-data.component';
-import { BudgetEntry } from '../shared/budget-entry.model';
+import { BudgetEntry } from '../shared/models/budget-entry.model';
 import { UserStoreService } from "../shared/user-store.service";
 import { AuthService } from "../shared/auth-service";
 

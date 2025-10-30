@@ -1,0 +1,37 @@
+<div *ngIf="isAuthenticated">
+
+  <div class="page-title">Groups</div>
+  <div class="page-desc">View and manage your Budget-Groups </div>
+    <div *ngIf="showForm">
+        <div *ngFor="let groupEntry of groupEntries; let i = index">
+        <div class="content-bar">
+          <div class="itemtitle">{{ groupEntry.groupName }}</div>
+          <div class="btncontainer">
+          <button (click)="onDelete(groupEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="right-p">
+        <button class="btn button2" (click)="toggleForm()">
+            {{ !showForm ? 'X' : 'Add an Object' }}
+        </button>
+    </p>
+
+<div *ngIf="!showForm">
+    <form (ngSubmit)="onSubmit()" [formGroup]="groupForm">
+      <div class="form-group">
+        <label> Group Name </label>
+        <input type="text" class="form-control" formControlName="group">
+      </div>
+
+      <button class="btn btn-success" [disabled]="groupForm.invalid">
+        Add Group
+      </button>
+    </form>
+  </div>
+</div>
+
+
+
