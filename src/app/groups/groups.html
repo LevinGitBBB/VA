@@ -2,7 +2,7 @@
     <div class="page-title">Groups</div>
     <div class="page-desc">View and manage your Budget-Groups </div>
       <div *ngFor="let groupEntry of groupEntries; let i = index">
-      <div class="content-bar">
+      <div class="test-bar">
         <div class="itemtitle">{{ groupEntry.groupName }}</div>
         <div class="btncontainer">
         <button (click)="onDelete(groupEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>

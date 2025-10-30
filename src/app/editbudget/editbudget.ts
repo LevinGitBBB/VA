@@ -7,6 +7,7 @@ import { BudgetEntry } from '../shared/models/budget-entry.model';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup';
+import { GroupEntry } from '../shared/models/group-entry.model';
 
 
 @Component({
@@ -24,6 +25,7 @@ export class Editbudget implements OnInit, OnDestroy {
   budgetEntries: BudgetEntry[] = [];
   budgetSubscription: Subscription;
   incomeSubscription: Subscription;
+  groupSubscription: Subscription;
   income: number; 
   budgetForm: FormGroup;
   editMode = false;
@@ -33,12 +35,8 @@ export class Editbudget implements OnInit, OnDestroy {
   budgetEntry: BudgetEntry; 
   currentUserId: string;
   editingEntryId: string; 
+  groupEntries: GroupEntry[] = [];
 
-  groups = [
-    { id: 1, name: 'Fixkosten' },
-    { id: 2, name: 'Freizeit' },
-    { id: 3, name: 'Miete' },
-  ];
 
   constructor(
     private budgetDataService: BudgetDataService,
@@ -52,6 +50,8 @@ export class Editbudget implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.budgetDataService.getBudgetEntries();
     this.budgetDataService.getIncome();
+    this.budgetDataService.getGroupEntries();
+
 
     // 2️⃣ Subscribe to budget entries updates
     this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
@@ -63,6 +63,12 @@ export class Editbudget implements OnInit, OnDestroy {
     this.incomeSubscription = this.budgetDataService.incomeSubject.subscribe(
       (incomeValue: number) => {
         this.income = incomeValue;
+      }
+    );
+
+    this.groupSubscription = this.budgetDataService.groupSubject.subscribe(
+      (entries: GroupEntry[]) => {
+        this.groupEntries = entries;
       }
     );
 
@@ -88,7 +94,7 @@ export class Editbudget implements OnInit, OnDestroy {
           this.showForm = true; // ensures form shows immediately
           this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
 
-          const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
+          const selectedGroup = this.groupEntries.find(g => g.groupName === budgetEntry.group) || null;
 
           // Patch form values
           this.budgetForm.patchValue({
@@ -147,7 +153,7 @@ export class Editbudget implements OnInit, OnDestroy {
 
     this.budgetEntryIndex = this.budgetEntries.indexOf(budgetEntry);
 
-    const selectedGroup = this.groups.find(g => g.name === budgetEntry.group) || null;
+    const selectedGroup = this.groupEntries.find(g => g.groupName === budgetEntry.group) || null;
 
     this.budgetForm.patchValue({
       group: selectedGroup,

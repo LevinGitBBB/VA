@@ -51,3 +51,17 @@ button{
 .hidden {
   display: none;
 }
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+.no-arrows[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+.no-arrows {
+  appearance: textfield !important;
+}

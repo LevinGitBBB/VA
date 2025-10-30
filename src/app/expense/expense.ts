@@ -7,6 +7,7 @@ import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup';
 import { ExpenseEntry } from '../shared/models/expense-entry.model';
+import { GroupEntry } from '../shared/models/group-entry.model';
 
 @Component({
   selector: 'app-expense',
@@ -26,16 +27,12 @@ export class Expenses implements OnInit, OnDestroy {
   expenseForm: FormGroup;
   editMode = false;
   expenseEntryIndex: number | null = null;
+  groupEntries: GroupEntry[] = [];
+  
 
   private paramId: string; 
   expenseEntry: ExpenseEntry; 
   currentUserId: string;
-
-  groups = [
-    { id: 1, name: 'Fixkosten' },
-    { id: 2, name: 'Freizeit' },
-    { id: 3, name: 'Miete' },
-  ];
 
   constructor(
     private budgetDataService: BudgetDataService,
@@ -78,7 +75,7 @@ export class Expenses implements OnInit, OnDestroy {
           this.showForm = true; // ensures form shows immediately
           this.expenseEntryIndex = this.expenseEntries.indexOf(expenseEntry);
 
-          const selectedGroup = this.groups.find(g => g.name === expenseEntry.group) || null;
+          const selectedGroup = this.groupEntries.find(g => g.groupName === expenseEntry.group) || null;
 
           // Patch form values
           this.expenseForm.patchValue({
@@ -137,7 +134,7 @@ export class Expenses implements OnInit, OnDestroy {
 
     this.expenseEntryIndex = this.expenseEntries.indexOf(expenseEntry);
 
-    const selectedGroup = this.groups.find(g => g.name === expenseEntry.group) || null;
+    const selectedGroup = this.groupEntries.find(g => g.groupName === expenseEntry.group) || null;
 
     this.expenseForm.patchValue({
       group: selectedGroup,

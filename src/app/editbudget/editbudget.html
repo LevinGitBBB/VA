@@ -59,35 +59,40 @@
   </div>
 
   <p class="right-p"  *ngIf="!editMode">
+    <button class="btn button2" routerLink="/groups"> Edit Groups</button>
     <button class="btn button2" (click)="toggleForm()">
       {{ showForm ? 'X' : 'Add an Object' }}
     </button>
   </p>
 
 
-  <div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
-    <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
-      <div class="form-group">
-        <label for="group">Group</label>
-        <select id="group" class="form-control" formControlName="group">
-          <option [ngValue]="null" disabled>Select a group</option>
-          <option *ngFor="let g of groups" [ngValue]="g">{{ g.name }}</option>
-        </select>
 
-        <label for="title">Title</label>
-        <input type="text" class="form-control" formControlName="title">
+  <div class="enter-container" [class.visible]="showForm">
+    <div *ngIf="showForm">
+      <form (ngSubmit)="onSubmit()" [formGroup]="budgetForm">
+        <div class="form-group">
+          <label for="group">Group</label>
+          <select id="group" class="form-control" formControlName="group">
+            <option [ngValue]="null" disabled>Select a group</option>
+            <option *ngFor="let g of groupEntries" [ngValue]="g">{{ g.groupName }}</option>
+          </select>
 
-        <label for="value">Value</label>
-        <input type="number" class="form-control" formControlName="value">
-        <div *ngIf="budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched" class="text-danger">
-          Value must be a number
+          <label for="title">Title</label>
+          <input type="text" class="form-control" formControlName="title">
+
+          <label for="value">Value</label>
+          <input type="number" class="form-control no-arrows" formControlName="value">
+          <div *ngIf="budgetForm.get('value')?.invalid && budgetForm.get('value')?.touched" class="text-danger">
+            Value must be a number
+          </div>
         </div>
-      </div>
 
-      <button class="btn btn-success" [disabled]="budgetForm.invalid">
-        {{ editMode ? 'Update Expense' : 'Add Expense' }}
-      </button>
-    </form>
+        <button class="btn btn-success" [disabled]="budgetForm.invalid">
+          {{ editMode ? 'Update Expense' : 'Add Expense' }}
+        </button>
+
+      </form>
+    </div>
   </div>
 </div>
 

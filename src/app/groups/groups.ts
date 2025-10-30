@@ -39,7 +39,6 @@ export class Groups {
   constructor(
     private budgetDataService: BudgetDataService,
     private router: Router,
-    private activatedRoute: ActivatedRoute,
     private authService: AuthService,
     private userStore: UserStoreService,
     private toast: NgToastService
@@ -48,18 +47,15 @@ export class Groups {
   ngOnInit(): void {
     this.budgetDataService.getGroupEntries();
 
-    // 2️⃣ Subscribe to budget entries updates
     this.groupSubscription = this.budgetDataService.groupSubject.subscribe(
       (entries: GroupEntry[]) => {
         this.groupEntries = entries;
       }
     );
 
-    // 3️⃣ Initialize the form
     this.groupForm = new FormGroup({
       group: new FormControl(null, Validators.required)
     });
-
 
     this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
       this.isAuthenticated = status;
