@@ -1,16 +1,16 @@
 <div *ngIf="isAuthenticated">
 
-  <div class="page-title">Ausgaben</div>
-  <div class="page-desc">View and manage your Ausgaben </div>
+  <div class="page-title">Expenses</div>
+  <div class="page-desc">View and manage your Expenses </div>
     <div *ngIf="!editMode">
-        <div *ngFor="let ausgabenEntry of ausgabenEntries; let i = index">
+        <div *ngFor="let expenseEntry of expenseEntries; let i = index">
         <div class="content-bar">
-          <div class="itemtitle">{{ ausgabenEntry.group }}</div>
-          <div class="itemstock">{{ ausgabenEntry.title }}</div>
-          <div class="itemprice">{{ ausgabenEntry.value }} CHF</div>
+          <div class="itemtitle">{{ expenseEntry.group }}</div>
+          <div class="itemstock">{{ expenseEntry.title }}</div>
+          <div class="itemprice">{{ expenseEntry.value }} CHF</div>
           <div class="btncontainer">
-          <button (click)="onEdit(ausgabenEntry.id)" class="cbbtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>
-          <button (click)="onDelete(ausgabenEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+          <button (click)="onEdit(expenseEntry.id)" class="cbbtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <button (click)="onDelete(expenseEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
           </div>
         </div>
       </div>
@@ -18,16 +18,16 @@
 
       <!-- Edit mode: show only the entry being edited -->
   <div *ngIf="editMode">
-    <div *ngFor="let ausgabenEntry of ausgabenEntries">
-      <div *ngIf="ausgabenEntry.id === editingEntryId" class="content-bar">
-        <div class="itemtitle">{{ ausgabenEntry.group }}</div>
-        <div class="itemstock">{{ ausgabenEntry.title }}</div>
-        <div class="itemprice">{{ ausgabenEntry.value }} CHF</div>
+    <div *ngFor="let expenseEntry of expenseEntries">
+      <div *ngIf="expenseEntry.id === editingEntryId" class="content-bar">
+        <div class="itemtitle">{{ expenseEntry.group }}</div>
+        <div class="itemstock">{{ expenseEntry.title }}</div>
+        <div class="itemprice">{{ expenseEntry.value }} CHF</div>
         <div class="btncontainer">
-          <button (click)="onEdit(ausgabenEntry.id)" class="cbbtn">
+          <button (click)="onEdit(expenseEntry.id)" class="cbbtn">
             <i class="fa fa-pencil" aria-hidden="true"></i>
           </button>
-          <button (click)="onDelete(ausgabenEntry.id)" class="cbbtn">
+          <button (click)="onDelete(expenseEntry.id)" class="cbbtn">
             <i class="fa fa-trash-o" aria-hidden="true"></i>
           </button>
         </div>
@@ -43,7 +43,7 @@
 
 
   <div *ngIf="showForm" class="enter-container" [class.visible]="showForm">
-    <form (ngSubmit)="onSubmit()" [formGroup]="ausgabenForm">
+    <form (ngSubmit)="onSubmit()" [formGroup]="expenseForm">
       <div class="form-group">
         <label for="group">Group</label>
         <select id="group" class="form-control" formControlName="group">
@@ -56,13 +56,13 @@
 
         <label for="value">Value</label>
         <input type="number" class="form-control" formControlName="value">
-        <div *ngIf="ausgabenForm.get('value')?.invalid && ausgabenForm.get('value')?.touched" class="text-danger">
+        <div *ngIf="expenseForm.get('value')?.invalid && expenseForm.get('value')?.touched" class="text-danger">
           Value must be a number
         </div>
       </div>
 
-      <button class="btn btn-success" [disabled]="ausgabenForm.invalid">
-        {{ editMode ? 'Update Ausgabe' : 'Add Ausgabe' }}
+      <button class="btn btn-success" [disabled]="expenseForm.invalid">
+        {{ editMode ? 'Update Expense' : 'Add Expense' }}
       </button>
     </form>
   </div>

@@ -27,10 +27,11 @@ import { SignUp } from './sign-up/sign-up';
 import { Reader } from './reader/reader';
 import { Editbudget } from './editbudget/editbudget';
 import { Welcome } from './welcome/welcome';
-import { Ausgaben } from './ausgaben/ausgaben';
+import { Expenses } from './expense/expense';
 
 // Interceptors / services
 import { AuthInterceptor } from './shared/auth-interceptor';
+import { Groups } from './groups/groups';
 
 @NgModule({
   declarations: [
@@ -43,7 +44,8 @@ import { AuthInterceptor } from './shared/auth-interceptor';
     Reader,
     Editbudget,
     Welcome,
-    Ausgaben
+    Expenses,
+    Groups
   ],
   imports: [
     BrowserModule,

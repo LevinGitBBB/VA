@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../shared/auth-service';
+import { Router } from '@angular/router';
+import { NgToastService } from "ng-angular-popup";
 
 @Component({
   selector: 'app-sign-up',
@@ -9,9 +11,9 @@ import { AuthService } from '../shared/auth-service';
   styleUrl: './sign-up.css'
 })
 export class SignUp {
-
   signupForm: FormGroup;
-  constructor(private authService: AuthService){}
+  success : any;
+  constructor(private authService: AuthService, private router: Router, private toast: NgToastService){}
 
   ngOnInit(): void {
     this.signupForm = new FormGroup({
@@ -20,10 +22,18 @@ export class SignUp {
     })
   }
 
-  onSubmit(){
-    this.authService.signupUser(this.signupForm.value.username, this.signupForm.value.password);
+  onSubmit() {
+    this.authService.signupUser(this.signupForm.value.username, this.signupForm.value.password)
+      .subscribe({
+        next: (res) => {
+          this.toast.success("Thank you for signing up, please continue to Login", 'Success', 5000);
+          this.router.navigate(['/login']);
+        },
+        error: (err) => {
+          this.toast.danger("This Username has already been used", 'Error Signing up', 5000);
+        }
+      });
   }
-
 
 
 }

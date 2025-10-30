@@ -6,8 +6,7 @@ import { BudgetDataService } from '../shared/budget-data.component';
 import { AuthService } from '../shared/auth-service';
 import { UserStoreService } from '../shared/user-store.service';
 import { NgToastService } from 'ng-angular-popup'
-import { Router } from '@angular/router';
-import { AusgabenEntry } from '../shared/ausgaben-entry.model';
+import { ExpenseEntry } from '../shared/expense-entry.model';
 
 @Component({
   selector: 'app-reader',
@@ -24,7 +23,7 @@ export class Reader {
   ];
 
   currentUserId: string;
-  ausgabenEntry: AusgabenEntry;
+  expenseEntry: ExpenseEntry;
   budgetForm: FormGroup;
   showForm = false;
   showButton = true;
@@ -38,7 +37,6 @@ export class Reader {
     private authService: AuthService, 
     private userStore: UserStoreService,
     private toast: NgToastService,
-    private router: Router,
   ) {}
 
 
@@ -127,10 +125,10 @@ export class Reader {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const entry = new AusgabenEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+    const entry = new ExpenseEntry('', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
 
-    this.budgetDataService.onAddAusgabenEntry(entry);
-    this.toast.success(String("Ausgabe added"),  'Success', 5000);
+    this.budgetDataService.onAddExpenseEntry(entry);
+    this.toast.success(String("Expense added"),  'Success', 5000);
     this.showForm = false;
     this.showButton = true;
     this.URL = null; 

@@ -6,7 +6,7 @@ import { ValueChangeEvent } from "@angular/forms";
 import { UserStoreService } from "./user-store.service";
 import { AuthService } from "./auth-service";
 import { environment } from "./environment";
-import { AusgabenEntry } from "./ausgaben-entry.model";
+import { ExpenseEntry } from "./expense-entry.model";
 
 @Injectable({providedIn:"root"})
 export class BudgetDataService{
@@ -16,13 +16,13 @@ export class BudgetDataService{
         constructor(private http: HttpClient, private authService: AuthService){}
 
         budgetSubject = new Subject<BudgetEntry[]>();
-        ausgabenSubject = new Subject<AusgabenEntry[]>();
+        expenseSubject = new Subject<ExpenseEntry[]>();
         incomeSubject = new Subject<number>();
 
 
         income: number; 
         budgetEntries: BudgetEntry[] = [];
-        ausgabenEntries: AusgabenEntry[] = [];
+        expenseEntries: ExpenseEntry[] = [];
 
         localhost = environment.host
 
@@ -35,10 +35,10 @@ export class BudgetDataService{
             }) 
         }
 
-        onDeleteAusgabenEntries(id: string){
-            this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-ausgaben/` + id).subscribe ((jsonData) =>{
+        onDeleteExpenseEntries(id: string){
+            this.http.delete<{message: string}>(`http://${this.localhost}:3000/remove-expense/` + id).subscribe ((jsonData) =>{
                 console.log(jsonData.message);
-                this.getAusgabenEntries();
+                this.getExpenseEntries();
             }) 
         }        
 
@@ -52,14 +52,14 @@ export class BudgetDataService{
             this.budgetSubject.next(this.budgetEntries);
         }
 
-        onAddAusgabenEntry(ausgabenEntry: AusgabenEntry){
-                this.http.post<{message: string}>(`http://${this.localhost}:3000/add-ausgabe`, ausgabenEntry).subscribe ((jsonData) => {
-                    console.log(ausgabenEntry);
+        onAddExpenseEntry(expenseEntry: ExpenseEntry){
+                this.http.post<{message: string}>(`http://${this.localhost}:3000/add-expense`, expenseEntry).subscribe ((jsonData) => {
+                    console.log(expenseEntry);
                     this.getBudgetEntries();
                 })
             
-            this.ausgabenEntries.push(ausgabenEntry);
-            this.ausgabenSubject.next(this.ausgabenEntries);
+            this.expenseEntries.push(expenseEntry);
+            this.expenseSubject.next(this.expenseEntries);
         }
 
         getBudgetEntries() {
@@ -90,7 +90,7 @@ export class BudgetDataService{
             });
         }
 
-        getAusgabenEntries() {
+        getExpenseEntries() {
 
             const token = this.authService.getToken();
 
@@ -101,9 +101,9 @@ export class BudgetDataService{
 
             const headers = { Authorization: `Bearer ${token}` };
             
-            this.http.get<{ ausgabenEntries: any}>(`http://${this.localhost}:3000/ausgaben-entries`, { headers })
+            this.http.get<{ expenseEntries: any}>(`http://${this.localhost}:3000/expense-entries`, { headers })
             .pipe(map((responseData) => {
-                return responseData.ausgabenEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
+                return responseData.expenseEntries.map((entry: {group: string; title: string; value: string; _id: string}) => {
                     return {
                         group: entry.group, 
                         title: entry.title, 
@@ -113,8 +113,8 @@ export class BudgetDataService{
                 })
             }))
             .subscribe((updateResponse) => {
-                this.ausgabenEntries = updateResponse; 
-                this.ausgabenSubject.next(this.ausgabenEntries);
+                this.expenseEntries = updateResponse; 
+                this.expenseSubject.next(this.expenseEntries);
             });
         }
 
@@ -125,11 +125,11 @@ export class BudgetDataService{
             return this.budgetEntries[index];
         }
 
-        getAusgabenEntry(id: string){
-            const index = this.ausgabenEntries.findIndex(el => {
+        getExpenseEntry(id: string){
+            const index = this.expenseEntries.findIndex(el => {
                 return el.id == id; 
             })
-            return this.ausgabenEntries[index];
+            return this.expenseEntries[index];
         }
 
         updateBudgetEntry(id: string, entry: BudgetEntry) {
@@ -139,10 +139,10 @@ export class BudgetDataService{
         })
         }
 
-        updateAusgabenEntry(id: string, entry: AusgabenEntry) {
-        this.http.put<{message: string}>(`http://${this.localhost}:3000/update-ausgaben/` + id, entry).subscribe((jsonData) => {
+        updateExpenseEntry(id: string, entry: ExpenseEntry) {
+        this.http.put<{message: string}>(`http://${this.localhost}:3000/update-expense/` + id, entry).subscribe((jsonData) => {
             console.log(jsonData.message);
-            this.getAusgabenEntries();
+            this.getExpenseEntries();
         })
         }
 
