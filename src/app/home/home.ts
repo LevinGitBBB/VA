@@ -31,6 +31,10 @@ export class Home implements OnInit, OnDestroy {
   public chartOptions: Partial<ChartOptions>;
   budgetEntries: BudgetEntry[] = [];
   budgetSubscription: Subscription;
+  incomeSubscription: Subscription;
+  income: number; 
+  groupedEntries: { group: string; total: number }[] = []; // also empty array
+  totalBudgetValue: number; 
 
   constructor(private budgetDataService: BudgetDataService, private userStore: UserStoreService, private auth: AuthService) {
     this.chartOptions = {
@@ -52,6 +56,8 @@ export class Home implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.budgetDataService.getBudgetEntries();
+    this.budgetDataService.getIncome();
+
 
     this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
       (entries: BudgetEntry[]) => {
@@ -70,6 +76,22 @@ export class Home implements OnInit, OnDestroy {
 
         // Series as plain number array
         this.chartOptions.series = Object.values(grouped);
+
+        this.groupedEntries = Object.entries(grouped).map(([group, total]) => ({
+          group,
+          total
+        }));
+
+        this.totalBudgetValue = this.groupedEntries.reduce((sum, entry) => sum + entry.total, 0);
+
+
+      }
+    );
+
+
+    this.incomeSubscription = this.budgetDataService.incomeSubject.subscribe(
+      (incomeValue: number) => {
+        this.income = incomeValue;
       }
     );
 

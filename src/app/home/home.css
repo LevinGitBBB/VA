@@ -24,7 +24,7 @@
 }
 
 /* Test items */
-.test {
+.dashboardPoints {
   padding: 8px 12px;
   margin-bottom: 8px;
   border-radius: 8px;
@@ -33,10 +33,10 @@
 }
 
 /* Different colors for each test */
-.test1 {
+.income {
   background-color: #041f5c;
 }
-.test2 {
+.budgetGroup {
   background-color: #5d054468; 
 }
 .test3 {
