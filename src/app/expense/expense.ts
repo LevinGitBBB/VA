@@ -23,6 +23,7 @@ export class Expenses implements OnInit, OnDestroy {
   showForm = false;
   expenseEntries: ExpenseEntry[] = [];
   expenseSubscription: Subscription;
+  groupSubscription: Subscription;
   editingEntryId: string; 
   expenseForm: FormGroup;
   editMode = false;
@@ -45,11 +46,19 @@ export class Expenses implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.budgetDataService.getExpenseEntries();
+      this.budgetDataService.getGroupEntries();
+
 
     // 2️⃣ Subscribe to budget entries updates
     this.expenseSubscription = this.budgetDataService.expenseSubject.subscribe(
       (entries: ExpenseEntry[]) => {
         this.expenseEntries = entries;
+      }
+    );
+
+    this.groupSubscription = this.budgetDataService.groupSubject.subscribe(
+      (entries: GroupEntry[]) => {
+        this.groupEntries = entries;
       }
     );
 
@@ -160,7 +169,7 @@ export class Expenses implements OnInit, OnDestroy {
     if (!this.expenseForm.valid) return;
 
     const formValue = this.expenseForm.value;
-    const entry = new ExpenseEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+    const entry = new ExpenseEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.groupName, formValue.title, formValue.value);
 
     if (this.editMode) {
       // Update local array

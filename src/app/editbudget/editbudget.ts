@@ -179,7 +179,7 @@ export class Editbudget implements OnInit, OnDestroy {
     if (!this.budgetForm.valid) return;
 
     const formValue = this.budgetForm.value;
-    const entry = new BudgetEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.name, formValue.title, formValue.value);
+    const entry = new BudgetEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group.groupName, formValue.title, formValue.value);
 
     if (this.editMode) {
       // Update local array
