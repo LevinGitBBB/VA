@@ -6,6 +6,7 @@ import { BudgetDataService } from '../shared/budget-data.component';
 import { BudgetEntry } from '../shared/models/budget-entry.model';
 import { UserStoreService } from "../shared/user-store.service";
 import { AuthService } from "../shared/auth-service";
+import { ExpenseEntry } from "../shared/models/expense-entry.model";
 
 export type ChartOptions = {
   series: number[];
@@ -14,8 +15,6 @@ export type ChartOptions = {
   responsive: ApexResponsive[];
   colors?: string[];
 };
-
-
 
 @Component({
   selector: 'app-home',
@@ -30,11 +29,15 @@ export class Home implements OnInit, OnDestroy {
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
   budgetEntries: BudgetEntry[] = [];
+  expenseEntries: ExpenseEntry[] = [];
   budgetSubscription: Subscription;
   incomeSubscription: Subscription;
+  expenseSubscription: Subscription;
   income: number; 
-  groupedEntries: { group: string; total: number }[] = []; // also empty array
+  groupedBudgetEntries: { group: string; total: number }[] = []; // also empty array
+  groupedExpenseEntries: { group: string; total: number }[] = []; // also empty array
   totalBudgetValue: number; 
+  totalExpenseValue: number;
 
   constructor(private budgetDataService: BudgetDataService, private userStore: UserStoreService, private auth: AuthService) {
     this.chartOptions = {
@@ -56,8 +59,10 @@ export class Home implements OnInit, OnDestroy {
   ngOnInit(): void {
 
     this.budgetDataService.getBudgetEntries();
+    this.budgetDataService.getExpenseEntries();
     this.budgetDataService.getIncome();
 
+    ////////////////////////////BUDGET////////////////////////////
 
     this.budgetSubscription = this.budgetDataService.budgetSubject.subscribe(
       (entries: BudgetEntry[]) => {
@@ -77,14 +82,36 @@ export class Home implements OnInit, OnDestroy {
         // Series as plain number array
         this.chartOptions.series = Object.values(grouped);
 
-        this.groupedEntries = Object.entries(grouped).map(([group, total]) => ({
+        this.groupedBudgetEntries = Object.entries(grouped).map(([group, total]) => ({
           group,
           total
         }));
 
-        this.totalBudgetValue = this.groupedEntries.reduce((sum, entry) => sum + entry.total, 0);
+        this.totalBudgetValue = this.groupedBudgetEntries.reduce((sum, entry) => sum + entry.total, 0);
 
 
+      }
+    );
+
+    ////////////////////////////EXPENSES////////////////////////////
+
+      this.expenseSubscription = this.budgetDataService.expenseSubject.subscribe(
+      (entries: ExpenseEntry[]) => {
+        this.expenseEntries = entries;
+
+        const grouped = this.expenseEntries.reduce((acc, entry) => {
+          const key = String(entry.group);
+          if (!acc[key]) acc[key] = 0;
+          acc[key] += Number(entry.value); // ensure number
+          return acc;
+        }, {} as Record<string, number>);
+
+        this.groupedExpenseEntries = Object.entries(grouped).map(([group, total]) => ({
+          group,
+          total
+        }));
+        
+        this.totalExpenseValue = this.groupedExpenseEntries.reduce((sum, entry) => sum + entry.total, 0);
       }
     );
 
@@ -104,7 +131,9 @@ export class Home implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
+    this.budgetSubscription?.unsubscribe();
+    this.expenseSubscription?.unsubscribe();
+    this.incomeSubscription?.unsubscribe();
   }
 
 }

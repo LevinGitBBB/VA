@@ -124,8 +124,10 @@ export class Editbudget implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.budgetSubscription) this.budgetSubscription.unsubscribe();
     this.authenticationSub.unsubscribe();
+    this.budgetSubscription?.unsubscribe();
+    this.incomeSubscription?.unsubscribe();
+    this.groupSubscription?.unsubscribe();
   }
 
   toggleForm(): void {

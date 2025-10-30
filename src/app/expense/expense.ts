@@ -114,8 +114,9 @@ export class Expenses implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.expenseSubscription) this.expenseSubscription.unsubscribe();
     this.authenticationSub.unsubscribe();
+    this.groupSubscription?.unsubscribe();
+    this.expenseSubscription?.unsubscribe();
   }
 
   toggleForm(): void {

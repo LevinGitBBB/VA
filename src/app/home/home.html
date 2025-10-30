@@ -5,14 +5,14 @@
       <div class="dashboardPoints income">Monthly Income: <strong> {{income}} CHF</strong> </div>
       <div  class="dashboardPoints budgetGroup">
       Open costs: 
-      <div *ngFor="let item of groupedEntries">
+      <div *ngFor="let item of groupedBudgetEntries">
         <strong>{{ item.group }}</strong>: {{ item.total}} CHF
       </div>
       <hr>
       <strong> Sum: </strong>{{totalBudgetValue}} CHF
       </div>
-
-      <div class="dashboardPoints test3">Left over after open Costs: <br> {{income - totalBudgetValue}} CHF</div>
+      <div class="dashboardPoints usedTotal"> Spent money (Expenses): <br> {{ totalExpenseValue }} CHF </div>
+      <div class="dashboardPoints currentAvailable"> Left over after open Costs: <br> {{income - totalBudgetValue}} CHF</div>
     </div>
   </div>
 
