@@ -1,10 +1,10 @@
 <div class="page-container">
   <div class="content">
     <div class="content-box">
-      <h4>Welcome {{fullName}}</h4>
+    <h3><strong>Welcome {{ fullName }}</strong></h3>
       <div class="dashboardPoints income">Monthly Income: <strong> {{income}} CHF</strong> </div>
       <div  class="dashboardPoints budgetGroup">
-      Open costs: 
+      Open costs (Budget): 
       <div *ngFor="let item of groupedBudgetEntries">
         <strong>{{ item.group }}</strong>: {{ item.total}} CHF
       </div>
@@ -12,7 +12,7 @@
       <strong> Sum: </strong>{{totalBudgetValue}} CHF
       </div>
       <div class="dashboardPoints usedTotal"> Spent money (Expenses): <br> {{ totalExpenseValue }} CHF </div>
-      <div class="dashboardPoints currentAvailable"> Left over after open Costs: <br> {{income - totalBudgetValue}} CHF</div>
+      <div class="dashboardPoints currentAvailable"> Left to spend: <br> {{income - totalBudgetValue}} CHF</div>
     </div>
   </div>
 
@@ -27,5 +27,16 @@
       [colors]="chartOptions.colors!"
       [responsive]="chartOptions.responsive!"
     ></apx-chart>
+
+    <apx-chart
+      *ngIf="totalOverview?.series?.length"
+      #chart
+      [series]="totalOverview.series!"
+      [chart]="totalOverview.chart!"
+      [labels]="totalOverview.labels!"
+      [colors]="totalOverview.colors!"
+      [responsive]="totalOverview.responsive!"
+    ></apx-chart>
+
   </div>
 </div>

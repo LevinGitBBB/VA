@@ -28,6 +28,7 @@ export class Home implements OnInit, OnDestroy {
 
   @ViewChild("chart") chart: ChartComponent;
   public chartOptions: Partial<ChartOptions>;
+  public totalOverview: Partial<ChartOptions>;
   budgetEntries: BudgetEntry[] = [];
   expenseEntries: ExpenseEntry[] = [];
   budgetSubscription: Subscription;
@@ -38,6 +39,7 @@ export class Home implements OnInit, OnDestroy {
   groupedExpenseEntries: { group: string; total: number }[] = []; // also empty array
   totalBudgetValue: number; 
   totalExpenseValue: number;
+  incomeRest: number; 
 
   constructor(private budgetDataService: BudgetDataService, private userStore: UserStoreService, private auth: AuthService) {
     this.chartOptions = {
@@ -52,6 +54,23 @@ export class Home implements OnInit, OnDestroy {
         }
       ]
     };
+
+    this.totalOverview = {
+      series: [],
+      chart: { width: 380, type: "pie" },
+      labels: [],
+      colors: ["#2e3b55", "#3f2f60", "#4b3a7f", "#5c3c9b", "#6a4bbf", "#7b5fe0"],
+      responsive: [
+        {
+          breakpoint: 100,
+          options: { chart: { width: 200 }, legend: { position: "bottom" } }
+        }
+      ]
+    };
+
+
+
+
   }
 
 
@@ -89,7 +108,7 @@ export class Home implements OnInit, OnDestroy {
 
         this.totalBudgetValue = this.groupedBudgetEntries.reduce((sum, entry) => sum + entry.total, 0);
 
-
+        this.updateTotalOverview();
       }
     );
 
@@ -112,6 +131,7 @@ export class Home implements OnInit, OnDestroy {
         }));
         
         this.totalExpenseValue = this.groupedExpenseEntries.reduce((sum, entry) => sum + entry.total, 0);
+        this.updateTotalOverview();
       }
     );
 
@@ -119,6 +139,7 @@ export class Home implements OnInit, OnDestroy {
     this.incomeSubscription = this.budgetDataService.incomeSubject.subscribe(
       (incomeValue: number) => {
         this.income = incomeValue;
+        this.updateTotalOverview();
       }
     );
 
@@ -126,8 +147,8 @@ export class Home implements OnInit, OnDestroy {
       .subscribe(val=> {
         let FullNameFromToken = this.auth.getFullNameFromToken();
         this.fullName = val || FullNameFromToken
+        this.fullName= this.fullName.charAt(0).toUpperCase() + this.fullName.slice(1); // capitalize first letter
       })
-    
   }
 
   ngOnDestroy(): void {
@@ -135,5 +156,21 @@ export class Home implements OnInit, OnDestroy {
     this.expenseSubscription?.unsubscribe();
     this.incomeSubscription?.unsubscribe();
   }
+
+  private updateTotalOverview(): void {
+  if (
+    this.totalBudgetValue != null &&
+    this.totalExpenseValue != null &&
+    this.income != null
+  ) {
+    this.incomeRest = this.income - (this.totalBudgetValue + this.totalExpenseValue);
+
+    this.totalOverview = {
+      ...this.totalOverview,
+      labels: ["Income Left", "Budget Total", "Expenses Total"],
+      series: [this.incomeRest, this.totalBudgetValue, this.totalExpenseValue],
+    };
+  }
+}
 
 }
