@@ -27,7 +27,7 @@ export class GeminiService {
       .post<{ response: string }>(
         `http://${this.localhost}:3000/bill-value`,
         {
-          prompt: "Please respond with the total of this bill. Only include the number.",
+          prompt: "Please respond with the total of this bill. Only include the number. If there is a comma replace it with a dot.",
           image: base64Image
         },
         { headers }

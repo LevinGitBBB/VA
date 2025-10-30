@@ -1,8 +1,3 @@
-.file-picker-btn{
-  margin:auto;
-  display: block;
-}
-
 .page-container {
   display: flex;
   justify-content: space-between;
@@ -68,4 +63,13 @@
   text-align: center;      /* optional: center text */
   padding: 10px 20px;      /* larger padding */
   font-size: 16px;         /* bigger text */
+}
+
+
+.button-center-wrapper {
+  display: flex;
+  justify-content: center; /* horizontal */
+  align-items: center;     /* vertical */
+  height: 75vh;           /* full viewport height */
+  width: 100%;
 }

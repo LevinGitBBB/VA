@@ -1,11 +1,7 @@
-<div style="
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 400px;
-">
-  <button class="btn button2 file-picker-btn" *ngIf="showButton" (click)="openFilePicker()"> Choose image </button>
+<div class="button-center-wrapper" *ngIf="showButton">
+  <button class="btn button2 file-picker-btn" (click)="openFilePicker()">Choose image</button>
 </div>
+
 
 <div class="page-container">
   <div class="content">
