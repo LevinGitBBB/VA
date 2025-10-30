@@ -4,9 +4,12 @@
       <div *ngFor="let groupEntry of groupEntries; let i = index">
       <div class="test-bar">
         <div class="itemtitle">{{ groupEntry.groupName }}</div>
+        <div class="itemtitle"> Spending Maximum: {{ groupEntry.maxSpending ? groupEntry.maxSpending : 'No Maximum set' }}</div>  
+
         <div class="btncontainer">
         <button (click)="onDelete(groupEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
         </div>
+
       </div>
     </div>
 
@@ -21,7 +24,14 @@
         <div class="form-group">
           <label> Group Name </label>
           <input type="text" class="form-control" formControlName="group">
-                  <button class="btn btn-success" [disabled]="groupForm.invalid">
+
+          <label> Spending Maximum of this Group </label>
+          <input type="number" class="form-control no-arrows" formControlName="maxSpending">
+          <div *ngIf="groupForm.get('maxSpending')?.invalid && groupForm.get('maxSpending')?.touched" class="text-danger">
+            Maximum must be a number
+          </div>
+
+          <button class="btn btn-success" [disabled]="groupForm.invalid">
           Add Group
         </button>
         </div>

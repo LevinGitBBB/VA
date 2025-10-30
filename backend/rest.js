@@ -248,6 +248,7 @@ app.post('/add-group', checkAuth, (req, res) => {
     const groupEntry = new GroupEntryModel({
         userId: req.user.id,
         groupName: req.body.groupName,
+        maxSpending: req.body.maxSpending
     });
 
     groupEntry.save()

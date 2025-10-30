@@ -6,7 +6,7 @@
   box-shadow: 0 2px 10px rgba(0,0,0,0.06);
   border-radius: 12px;
   display: grid;
-  grid-template-columns: auto 50px; /* title | stock | price | buttons */
+  grid-template-columns: 200px auto 50px; /* title | stock | price | buttons */
   grid-template-rows: 1fr;
 }
 
@@ -53,4 +53,18 @@
 
 .hidden {
   display: none;
+}
+
+.no-arrows::-webkit-inner-spin-button,
+.no-arrows::-webkit-outer-spin-button {
+  -webkit-appearance: none !important;
+  margin: 0;
+}
+
+.no-arrows[type=number] {
+  -moz-appearance: textfield !important;
+}
+
+.no-arrows {
+  appearance: textfield !important;
 }

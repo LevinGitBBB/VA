@@ -206,9 +206,10 @@ export class BudgetDataService{
             
             this.http.get<{ groupEntries: any}>(`http://${this.localhost}:3000/group-entries`, { headers })
             .pipe(map((responseData) => {
-                return responseData.groupEntries.map((entry: {groupName: string; _id: string}) => {
+                return responseData.groupEntries.map((entry: {groupName: string; maxSpending: number; _id: string}) => {
                     return {
                         groupName: entry.groupName, 
+                        maxSpending: entry.maxSpending,
                         id: entry._id
                     }
                 })

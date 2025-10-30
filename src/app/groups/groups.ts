@@ -54,7 +54,11 @@ export class Groups {
     );
 
     this.groupForm = new FormGroup({
-      group: new FormControl(null, Validators.required)
+      group: new FormControl(null, Validators.required),
+      maxSpending: new FormControl(null, [
+        Validators.required,
+        Validators.pattern(/^-?\d+(\.\d+)?$/)
+      ])
     });
 
     this.authenticationSub = this.authService.getAuthenticatedSub().subscribe(status => {
@@ -86,7 +90,7 @@ export class Groups {
   onSubmit(): void {
     if (!this.groupForm.valid) return;
     const formValue = this.groupForm.value;
-    const entry = new GroupEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group);
+    const entry = new GroupEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group, formValue.maxSpending);
     this.budgetDataService.onAddGroupEntry(entry);
     this.toast.success(String("Group added"),  'Success', 5000);
     this.resetForm();
