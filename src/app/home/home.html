@@ -16,27 +16,65 @@
     </div>
   </div>
 
-  <div class="chart-wrapper">
-    <!-- Only render chart after data is ready -->
-    <apx-chart
-      *ngIf="chartOptions?.series?.length"
-      #chart
-      [series]="chartOptions.series!"
-      [chart]="chartOptions.chart!"
-      [labels]="chartOptions.labels!"
-      [colors]="chartOptions.colors!"
-      [responsive]="chartOptions.responsive!"
-    ></apx-chart>
+<div class="group-diagram">
+  <h4><strong>Group Limit Breakdown</strong></h4>
+  <div class="group-gauge-row">
+    <div class="group-gauge-wrapper" *ngFor="let group of groupedMaxSpending; let i = index">
+      <svg #groupGauge
+          width="200" height="200"
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 44 44"
+          fill="transparent"
+          [attr.data-percent]="getGroupPercentUsed(group.groupName)">, 
 
-    <apx-chart
-      *ngIf="totalOverview?.series?.length"
-      #chart
-      [series]="totalOverview.series!"
-      [chart]="totalOverview.chart!"
-      [labels]="totalOverview.labels!"
-      [colors]="totalOverview.colors!"
-      [responsive]="totalOverview.responsive!"
-    ></apx-chart>
-
+        <!-- Background circle -->
+        <circle
+          cx="22" cy="22" r="20"
+          [attr.stroke]="backgroundColors[i % backgroundColors.length]"
+          [attr.stroke-width]="strokeWidth"/>
+        <!-- Progress circle -->
+        <circle
+          cx="22" cy="22" r="20"
+          [attr.stroke]="getGroupPercentUsed(group.groupName) === 100 ? '#D44949' : strokeColors[i % strokeColors.length]"
+          [attr.stroke-width]="strokeWidth"
+          stroke-linecap="round"
+          transform="rotate(-90 22 22)"/>
+        <!-- Group Name -->
+        <text x="22" [attr.y]="getGroupPercentUsed(group.groupName) >= 100 ? 10 : 18" text-anchor="middle" dominant-baseline="central" font-size="4" fill="#000">
+          {{group.groupName}}
+        </text>
+        <!-- Percentage or ALERT -->
+        <text x="22" y="17" text-anchor="middle" dominant-baseline="central" font-size="6" fill="#000" [attr.font-weight]="getGroupPercentUsed(group.groupName) >= 100 ? 'bold' : 'normal'">
+          {{ getGroupPercentUsed(group.groupName) === 100 ?  '⚠️'  : "" }}
+        </text>
+        <text x="22"  [attr.y]="getGroupPercentUsed(group.groupName) >= 100 ? 25 : 28" text-anchor="middle" dominant-baseline="central" font-size="3" fill="#000" [attr.font-weight]="getGroupPercentUsed(group.groupName) >= 100 ? 'bold' : 'normal'">
+          {{ getGroupPercentUsed(group.groupName) === 100 ? 'Group-Limit exceeded' : (getGroupPercentUsed(group.groupName) | number:'1.0-0') + '%' }}
+        </text>
+      </svg>
+    </div>
   </div>
+</div>
+
+
+<div class="chart-wrapper">
+  <!-- Existing charts -->
+  <apx-chart
+    *ngIf="chartOptions?.series?.length"
+    #chart
+    [series]="chartOptions.series!"
+    [chart]="chartOptions.chart!"
+    [labels]="chartOptions.labels!"
+    [colors]="chartOptions.colors!"
+    [responsive]="chartOptions.responsive!"
+  ></apx-chart>
+
+  <apx-chart
+    *ngIf="totalOverview?.series?.length"
+    #chart
+    [series]="totalOverview.series!"
+    [chart]="totalOverview.chart!"
+    [labels]="totalOverview.labels!"
+    [colors]="totalOverview.colors!"
+    [responsive]="totalOverview.responsive!"
+  ></apx-chart>
 </div>

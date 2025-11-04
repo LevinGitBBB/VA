@@ -83,7 +83,7 @@ export class Groups {
     this.editMode = false;
     this.groupEntryIndex = null;
     this.groupForm.reset();
-    this.showForm = true;
+    this.showForm = false;
     this.router.navigate(['/groups'], { replaceUrl: true });
   }
 

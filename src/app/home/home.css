@@ -53,3 +53,29 @@
 }
 
 hr { margin: 0.3em auto; }
+
+/* Required for Groups */
+svg circle:nth-child(2) {
+  /*   Personal preference */
+  stroke-linecap: round;
+  transition: stroke-dasharray 1.75s cubic-bezier(0.770, 0.000, 0.175, 1.000), stroke-opacity .75s;
+  /*   This is actually needed */
+  stroke-dasharray: 0 9999;
+  stroke-opacity: 0;
+}
+
+.group-diagram{
+  padding: 20px 30px;
+}
+
+.group-gauge-row {
+  display: flex;
+  gap: 20px;            /* space between gauges */
+  flex-wrap: wrap;       /* wrap to next line if too many gauges */
+  align-items: flex-start;
+}
+
+.group-gauge-wrapper svg {
+  width: 120px;   /* consistent width */
+  height: 120px;  /* consistent height */
+}

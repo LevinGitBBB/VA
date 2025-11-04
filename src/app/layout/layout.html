@@ -9,10 +9,11 @@
     <button *ngIf="!userAuthenticated"class="mbtn" [routerLink]="['/sign-up']"><i class="fa fa-bolt icon"></i> Sign Up</button>
 
 
-    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/home']"><i class="fa fa-list icon"></i> Home </button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/home']"><i class="fa fa-home icon"></i> Dashboard </button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/groups']"><i class="fa fa-list icon"></i> Groups </button>
     <button *ngIf="userAuthenticated"class="mbtn" [routerLink]="['/edit-budget']"><i class="fa fa-calculator icon"></i> Budget</button>
     <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/expense']"><i class="fa fa-shopping-cart icon"></i> Expenses</button>
-    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/reader']"><i class="fa fa-user icon"></i> Reader </button>
+    <button *ngIf="userAuthenticated" class="mbtn" [routerLink]="['/reader']"><i class="fa fa-camera icon"></i> Reader </button>
     <button *ngIf="userAuthenticated" class="mbtn logout-btn" (click)="logout()"><i class="fa fa-sign-out icon"></i> Logout</button></div>
 
   <!-- CONTENT AREA -->
