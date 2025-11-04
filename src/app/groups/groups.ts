@@ -19,7 +19,7 @@ export class Groups {
   private authenticationSub: Subscription; 
   isAuthenticated = false;
 
-  showForm = true;
+  showForm = false;
   groupEntries: GroupEntry[] = [];
   groupSubscription: Subscription;
   editingEntryId: string; 
@@ -87,15 +87,6 @@ export class Groups {
     this.router.navigate(['/groups'], { replaceUrl: true });
   }
 
-  onSubmit(): void {
-    if (!this.groupForm.valid) return;
-    const formValue = this.groupForm.value;
-    const entry = new GroupEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group, formValue.maxSpending);
-    this.budgetDataService.onAddGroupEntry(entry);
-    this.toast.success(String("Group added"),  'Success', 5000);
-    this.resetForm();
-  }
-
   toggleForm(): void {
     this.showForm = !this.showForm;
   }
@@ -104,6 +95,50 @@ export class Groups {
     this.budgetDataService.onDeleteGroupEntries(id);
     this.toast.success(String("Expense removed"),  'Success', 5000);
     this.resetForm();
+  }
+
+  onEdit(id: string): void {
+    this.editingEntryId = id;
+    this.startEdit(id);
+  }
+
+  private startEdit(id: string): void {
+    const groupEntry = this.groupEntries.find(be => be.id === id);
+    if (!groupEntry) return;
+
+    this.groupEntryIndex = this.groupEntries.indexOf(groupEntry);
+
+    const selectedGroup = this.groupEntries.find(g => g.groupName === groupEntry.groupName) || null;
+
+    this.groupForm.patchValue({
+      group: groupEntry.groupName,
+      maxSpending: groupEntry.maxSpending
+    });
+
+    this.paramId = id.toString();
+    this.editMode = true;
+    this.showForm = true;
+  }
+
+
+  onSubmit(): void {
+    if (!this.groupForm.valid) return;
+    const formValue = this.groupForm.value;
+    const entry = new GroupEntry(this.editMode ? this.paramId : '', this.currentUserId, formValue.group, formValue.maxSpending);
+
+    if (this.editMode) {
+      if (this.groupEntryIndex !== null) {
+        this.groupEntries[this.groupEntryIndex] = entry;
+        this.budgetDataService.groupSubject.next(this.groupEntries);
+      }
+      this.budgetDataService.updateGroupEntry(entry.id, entry);
+      this.toast.success(String("Budget-Point updated"),  'Success', 5000);
+    } else {
+      this.budgetDataService.onAddGroupEntry(entry);
+      this.toast.success(String("Group added"),  'Success', 5000);
+    }
+
+    this.resetForm();  
   }
 
 }

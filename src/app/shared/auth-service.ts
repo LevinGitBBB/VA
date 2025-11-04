@@ -45,19 +45,26 @@ export class AuthService{
         const authData: AuthModel = {username: username, password: password}; 
 
         this.http.post<{token: string, expiresIn: number}>(`http://${this.localhost}:3000/login/`, authData)
-            .subscribe(res => {
-                this.token = res.token;
-                if(this.token){
-                    this.authenticatedSub.next(true);
-                    this.isAuthenticated = true;
-                    this.router.navigate(['/home'])
-                    const now = new Date(); 
-                    const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
-                    this.storeLoginDetails(this.token, expiresDate)
-                    const tokenPayload = this.decodedToken();
-                    this.userStore.setFullNameForStore(tokenPayload.username)
-                    this.userStore.setUserIdForStore(tokenPayload.userId)
-                    this.toast.success(String("Successfully logged in"),  'Success', 5000);
+            .subscribe({
+                next: (res) => {
+                    this.token = res.token;
+                    if(this.token){
+                        this.authenticatedSub.next(true);
+                        this.isAuthenticated = true;
+                        this.router.navigate(['/home'])
+                        const now = new Date(); 
+                        const expiresDate = new Date(now.getTime() + (res.expiresIn * 1000));
+                        this.storeLoginDetails(this.token, expiresDate)
+                        const tokenPayload = this.decodedToken();
+                        this.userStore.setFullNameForStore(tokenPayload.username)
+                        this.userStore.setUserIdForStore(tokenPayload.userId)
+                        this.toast.success(String("Successfully logged in"),  'Success', 5000);
+                    }
+                },
+                error: (err) => {
+                    console.error("Login failed:", err.error?.message);
+                    this.toast.danger(String("Login failed. " + err.error?.message + "."), 'Error', 5000);
+                    this.isAuthenticated = false;
                 }
             })
     }

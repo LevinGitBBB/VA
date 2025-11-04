@@ -220,8 +220,12 @@ export class BudgetDataService{
             });
         }
 
-
-
+        updateGroupEntry(id: string, entry: GroupEntry) {
+        this.http.put<{message: string}>(`http://${this.localhost}:3000/update-group/` + id, entry).subscribe((jsonData) => {
+            console.log(jsonData.message);
+            this.getGroupEntries();
+        })
+        }
 
 
 }

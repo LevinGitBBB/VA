@@ -161,39 +161,42 @@ app.post('/sign-up', (req, res) => {
         })
 })
 
-app.post('/login', (req,res) => {
-
+app.post('/login', (req, res) => {
     let userFound;
 
-    UserModel.findOne({username: req.body.username})
+    UserModel.findOne({ username: req.body.username })
         .then(user => {
-            if(!user){
-                return res.status(401).json({
-                    message: 'User not found'
-                })
+            if (!user) {
+                // Send response and stop further chain
+                res.status(401).json({ message: 'User not found' });
+                throw new Error('StopPromiseChain');
             }
-            userFound = user
-            return bcrypt.compare(req.body.password, user.password)
-        })
-    .then(result => {
-        if(!result){
-            return res.status(401).json({
-                message: 'Password is incorrect'
-            })
-        }
 
-        const token = jwt.sign({username: userFound.username, userId: userFound._id}, "secret_string", {expiresIn:"1h"})
-        return res.status(200).json({
-            token: token,
-            expiresIn: 3600
+            userFound = user;
+            return bcrypt.compare(req.body.password, user.password);
         })
-    })
-    .catch(err => {
-        return res.status(401).json({
-            message: 'Error with authentication'
+        .then(result => {
+            if (!result) {
+                res.status(401).json({ message: 'Password is incorrect' });
+                throw new Error('StopPromiseChain'); 
+            }
+
+            const token = jwt.sign(
+                { username: userFound.username, userId: userFound._id },
+                "secret_string",
+                { expiresIn: "1h" }
+            );
+
+            res.status(200).json({ token: token, expiresIn: 3600 });
         })
-    })
-})
+        .catch(err => {
+            if (err.message === 'StopPromiseChain') return;
+
+            console.error(err);
+            res.status(500).json({ message: 'Error with authentication' });
+        });
+});
+
 
 app.post('/upload-income', checkAuth, async (req, res) => {
   try {
@@ -283,7 +286,13 @@ app.delete('/remove-group/:id', (req, res) => {
     })
 })
 
-
+app.put('/update-group/:id', (req, res) => {
+    const updatedEntry = new GroupEntryModel({_id: req.body.id, userId: req.userId, groupName: req.body.groupName, maxSpending: req.body.maxSpending })
+    GroupEntryModel.updateOne({_id: req.body.id}, updatedEntry)
+        .then(() => {
+            res.status(200).json({ message: 'Update Completed'});
+        })
+});
 
 
 module.exports = app; 

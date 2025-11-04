@@ -7,7 +7,8 @@
         <div class="itemtitle"> Spending Maximum: {{ groupEntry.maxSpending ? groupEntry.maxSpending : 'No Maximum set' }}</div>  
 
         <div class="btncontainer">
-        <button (click)="onDelete(groupEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
+          <button (click)="onEdit(groupEntry.id)" class="cbbtn"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+          <button (click)="onDelete(groupEntry.id)" class="cbbtn"><i class="fa fa-trash-o" aria-hidden="true"></i></button>
         </div>
 
       </div>
@@ -15,24 +16,24 @@
 
       <p class="right-p">
           <button class="btn button2" (click)="toggleForm()">
-              {{ !showForm ? 'X' : 'Add an Object' }}
+              {{ showForm ? 'X' : 'Add an Object' }}
           </button>
       </p>
 
- <div class="enter-container" [class.visible]="!showForm">
+ <div class="enter-container" [class.visible]="showForm">
       <form (ngSubmit)="onSubmit()" [formGroup]="groupForm">
         <div class="form-group">
           <label> Group Name </label>
           <input type="text" class="form-control" formControlName="group">
 
-          <label> Spending Maximum of this Group </label>
+          <label> Spending Maximum </label>
           <input type="number" class="form-control no-arrows" formControlName="maxSpending">
           <div *ngIf="groupForm.get('maxSpending')?.invalid && groupForm.get('maxSpending')?.touched" class="text-danger">
             Maximum must be a number
           </div>
 
           <button class="btn btn-success" [disabled]="groupForm.invalid">
-          Add Group
+          {{ editMode ? 'Update Group' : 'Add Group' }}
         </button>
         </div>
       </form>
