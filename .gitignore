@@ -43,4 +43,4 @@ testem.log
 Thumbs.db
 
 # Custom 
-/app/shared/environment.ts
+src/app/shared/environment.ts
